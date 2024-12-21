@@ -1,7 +1,9 @@
+#ifndef GRAFO_H
+#define GRAFO_H
+
 #include <iostream>
 #include <string>
 #include <fstream>
-
 
 class Grafo
 {
@@ -29,3 +31,5 @@ public:
     virtual Grafo* carrega_grafo(std::string &filename); // Não tenho certeza se o retorno esta correto
     virtual Grafo* novo_grafo(std::string &filename); // Não tenho certeza se o retorno esta correto
 };
+
+#endif 
