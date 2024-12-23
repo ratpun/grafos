@@ -13,6 +13,13 @@ private:
 public:
     Grafo_matriz(int n, bool dir, bool pondArestas, bool pondVertices);
     ~Grafo_matriz();
+    void adicionarAresta(Vertice* vertice);
+    void imprimirMatriz();
+    bool verificarAresta (int origem, int destino);
+    void removerAresta (int origem, int destino);   
+    void limparGrafo();
+    void verificarLigacoes(int x);
+    bool verificarLigacao(int x, int y);
 };
 
 #endif
