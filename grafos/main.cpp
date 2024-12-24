@@ -6,19 +6,6 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 
-  /* Formas de execução:
-   *
-   * Caso 1: ./main.out -d -m grafo.txt
-   *   - Imprime descrição do grafo após carregar com matriz de adjacência.
-   * Caso 2: ./main.out -d -l grafo.txt
-   *   - Imprime descrição do grafo após carregar com lista encadeada.
-   * Caso 3: ./main.out -c -m descricao.txt grafo.txt
-   *   - Lê config (descricao.txt), cria grafo aleatório (matriz) e salva em
-   * grafo.txt. Caso 4: ./main.out -c -l descricao.txt grafo.txt
-   *   - Lê config (descricao.txt), cria grafo aleatório (lista) e salva em
-   * grafo.txt.
-   */
-
   if (argc < 4) {
     cerr << "Uso incorreto. Exemplos:\n"
          << "  " << argv[0] << " -d -m grafo.txt\n"
