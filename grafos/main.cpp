@@ -1,9 +1,24 @@
+#include "Grafo.h"
 #include "Grafo_lista.h"
 #include "Grafo_matriz.h"
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
+
+  /*
+   * Formas de execução:
+   *
+   * Caso 1: ./main.out -d -m grafo.txt
+   *   - Imprime descrição do grafo após carregar com matriz de adjacência.
+   * Caso 2: ./main.out -d -l grafo.txt
+   *   - Imprime descrição do grafo após carregar com lista encadeada.
+   * Caso 3: ./main.out -c -m descricao.txt grafo.txt
+   *   - Lê config (descricao.txt), cria grafo aleatório (matriz) e salva em
+   * grafo.txt. Caso 4: ./main.out -c -l descricao.txt grafo.txt
+   *   - Lê config (descricao.txt), cria grafo aleatório (lista) e salva em
+   * grafo.txt.
+   */
 
   if (argc < 4) {
     cerr << "Uso incorreto. Exemplos:\n"
@@ -36,9 +51,13 @@ int main(int argc, char *argv[]) {
 
     // Escolhe a implementação
     if (estrutura == "-m") {
-      // g = new grafo_matriz(); - Apontar corretamente!
+      g = new Grafo_matriz(0, false, false, false);
+      // Apontar corretamente com os parâmetros certos! Talvez seja interessante
+      // não passar os parametros na criação
     } else if (estrutura == "-l") {
-      // g = new grafo_lista(); -  Apontar corretamente!
+      g = new Grafo_lista(0, false, false, false);
+      // Apontar corretamente com os parâmetros certos! Talvez seja interessante
+      // não passar os parâmetros na criação
     } else {
       cerr << "Estrutura inválida (use -m ou -l).\n";
       return 1;
@@ -77,9 +96,9 @@ int main(int argc, char *argv[]) {
 
     // Escolhe a implementação
     if (estrutura == "-m") {
-      // g = new grafo_matriz(); // Apontar corretamente!
+      // g = new grafo_matriz(); // Apontar corretamente com os parâmetros!
     } else if (estrutura == "-l") {
-      // g = new grafo_lista(); // Apontar corretamente!
+      // g = new grafo_lista(); // Apontar corretamente com os parâmetros!
     } else {
       cerr << "Estrutura inválida (use -m ou -l).\n";
       return 1;
