@@ -6,8 +6,7 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 
-  /*
-   * Formas de execução:
+  /* Formas de execução:
    *
    * Caso 1: ./main.out -d -m grafo.txt
    *   - Imprime descrição do grafo após carregar com matriz de adjacência.
