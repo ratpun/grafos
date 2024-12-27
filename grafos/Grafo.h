@@ -17,7 +17,7 @@ protected:
 public:
   Grafo() = default;
   virtual ~Grafo() = default;
-  virtual void imprimir();
+  //   virtual void imprimir();
   virtual bool eh_bipartido() = 0;
   virtual int n_conexo() = 0;
   virtual int get_grau() = 0;

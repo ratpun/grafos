@@ -1,5 +1,5 @@
 #include "Grafo.h"
-#include "Grafo_lista.h"
+#include "Grafo_lista.cpp"
 #include "Grafo_matriz.h"
 
 using namespace std;
@@ -51,11 +51,11 @@ int main(int argc, char *argv[]) {
 
     // Escolhe a implementação
     if (estrutura == "-m") {
-      g = new Grafo_matriz(0, false, false, false);
+      // g = new Grafo_matriz(0, false, false, false);
       // Apontar corretamente com os parâmetros certos! Talvez seja interessante
       // não passar os parametros na criação
     } else if (estrutura == "-l") {
-      g = new Grafo_lista(0, false, false, false);
+      g = new Grafo_lista();
       // Apontar corretamente com os parâmetros certos! Talvez seja interessante
       // não passar os parâmetros na criação
     } else {
@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
     if (estrutura == "-m") {
       // g = new grafo_matriz(); // Apontar corretamente com os parâmetros!
     } else if (estrutura == "-l") {
-      // g = new grafo_lista(); // Apontar corretamente com os parâmetros!
+      g = new Grafo_lista();
     } else {
       cerr << "Estrutura inválida (use -m ou -l).\n";
       return 1;

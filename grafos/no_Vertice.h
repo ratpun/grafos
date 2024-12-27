@@ -3,9 +3,6 @@
 
 #include "no_Aresta.h"
 
-/**
- * @brief Nó que representa um vértice e sua lista de adjacência.
- */
 class NoVertice {
 private:
   int idVertice;      ///< Identificador único do vértice

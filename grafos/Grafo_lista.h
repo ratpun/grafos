@@ -1,19 +1,25 @@
-#ifndef GRAFO_LISTA_H
-#define GRAFO_LISTA_H
+// #ifndef GRAFO_LISTA_H
+// #define GRAFO_LISTA_H
 
-#include "Grafo.h"
-#include "Vertice.h"
-#include <iostream>
-#include <string>
-#include <fstream>
+// #include "Grafo.h"
+// #include "Vertice.h"
+// #include "no_Vertice.h"
+// #include <fstream>
+// #include <iostream>
+// #include <string>
 
-class Grafo_lista : public Grafo
-{
-private:
-    Vertice **vertices; // indica um array de ponteiros para vértices
-public:
-    Grafo_lista(int n, bool dir, bool pondArestas, bool pondVertices);
-    ~Grafo_lista();
-};
+// class Grafo_lista : public Grafo {
+// private:
+//   NoVertice *primeiroVertice; ///< Ponteiro para o primeiro vértice da lista
+//   int numVertices;            ///< Número de vértices (ordem do grafo)
+//   int numArestas;             ///< Número de arestas
+//   bool direcionado;           ///< Flag que indica se o grafo é direcionado
+//   bool verticesPonderados;    ///< Flag que indica se os vértices têm peso
+//   bool arestasPonderadas;     ///< Flag que indica se as arestas têm peso
 
-#endif
+// public:
+//   Grafo_lista();
+//   ~Grafo_lista();
+// };
+
+// #endif
