@@ -14,11 +14,6 @@ private:
                              ///< encadeada de vértices)
 
 public:
-  /**
-   * @brief Construtor do nó de vértice.
-   * @param idVertice ID do vértice
-   * @param pesoVertice Peso do vértice (padrão = 1.0)
-   */
   NoVertice(int idVertice, double pesoVertice = 1.0)
       : idVertice(idVertice), pesoVertice(pesoVertice), primeiraAresta(nullptr),
         proximoVertice(nullptr) {}
@@ -30,11 +25,6 @@ public:
 
   void setProximoVertice(NoVertice *prox) { proximoVertice = prox; }
 
-  /**
-   * @brief Insere uma nova aresta na lista de adjacência deste vértice.
-   * @param idDestino ID do vértice de destino da aresta
-   * @param peso Peso da aresta
-   */
   void insereAresta(int idDestino, double peso) {
     NoAresta *novaAresta = new NoAresta(idDestino, peso);
     novaAresta->setProxima(primeiraAresta);
