@@ -56,8 +56,6 @@ int main(int argc, char *argv[]) {
       // não passar os parametros na criação
     } else if (estrutura == "-l") {
       g = new Grafo_lista();
-      // Apontar corretamente com os parâmetros certos! Talvez seja interessante
-      // não passar os parâmetros na criação
     } else {
       cerr << "Estrutura inválida (use -m ou -l).\n";
       return 1;
