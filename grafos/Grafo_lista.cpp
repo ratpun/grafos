@@ -412,7 +412,41 @@ public:
   }
 
   bool possui_ponte() override {
-    // Implementar função que diz se existe ao menos uma aresta ponte
+    // Arrays para DFS
+    int *disc = new int[numVertices + 1];
+    int *low = new int[numVertices + 1];
+    bool *visitado = new bool[numVertices + 1];
+
+    // Inicializa os arrays
+    for (int i = 1; i <= numVertices; i++) {
+      disc[i] = -1;
+      low[i] = -1;
+      visitado[i] = false;
+    }
+
+    // Tempo de descoberta inicial
+    int tempo = 0;
+
+    // Percorre todos os vértices
+    NoVertice *vAtual = primeiroVertice;
+    while (vAtual != nullptr) {
+      int idVertice = vAtual->getIdVertice();
+      if (!visitado[idVertice]) {
+        if (dfs_ponte(idVertice, tempo, disc, low, visitado, nullptr)) {
+          // Libera memória e retorna true se encontrar uma ponte
+          delete[] disc;
+          delete[] low;
+          delete[] visitado;
+          return true;
+        }
+      }
+      vAtual = vAtual->getProximoVertice();
+    }
+
+    // Libera memória e retorna false se nenhuma ponte for encontrada
+    delete[] disc;
+    delete[] low;
+    delete[] visitado;
     return false;
   }
 
@@ -680,6 +714,47 @@ private:
     }
 
     liberarLista(vizinhos);
+  }
+
+  bool dfs_ponte(int u, int &tempo, int disc[], int low[], bool visitado[],
+                 int *pai) {
+    // Marca o vértice como visitado
+    visitado[u] = true;
+
+    // Inicializa discovery time e low-link value
+    disc[u] = low[u] = ++tempo;
+
+    // Percorre os vizinhos
+    NoLista *vizinhos = getVizinhosIgnorandoDirecao(u);
+    NoLista *atual = vizinhos;
+    while (atual != nullptr) {
+      int v = atual->idVertice;
+
+      if (!visitado[v]) {
+        // Realiza a DFS recursivamente
+        if (dfs_ponte(v, tempo, disc, low, visitado, &u)) {
+          liberarLista(vizinhos);
+          return true;
+        }
+
+        // Atualiza o low-link value do vértice atual
+        low[u] = std::min(low[u], low[v]);
+
+        // Verifica condição de ponte
+        if (low[v] > disc[u]) {
+          liberarLista(vizinhos);
+          return true; // Encontramos uma ponte
+        }
+      } else if (pai == nullptr || v != *pai) {
+        // Atualiza low-link value para aresta de retorno
+        low[u] = std::min(low[u], disc[v]);
+      }
+
+      atual = atual->proximo;
+    }
+
+    liberarLista(vizinhos);
+    return false;
   }
 };
 
