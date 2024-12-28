@@ -235,8 +235,46 @@ public:
   bool vertice_ponderado() override { return verticesPonderados; }
   bool aresta_ponderada() override { return arestasPonderadas; }
   bool eh_completo() override {
-    // Implementar função que diz se um grafo é completo ou não
-    return false;
+    // Se tem 0 ou 1 vértice, podemos considerar "completo" por definição
+    if (numVertices <= 1) {
+      return true;
+    }
+
+    // Percorre todos os vértices
+    NoVertice *vAtual = primeiroVertice;
+    while (vAtual != nullptr) {
+      int idOrigem = vAtual->getIdVertice();
+
+      // Percorre todos os vértices novamente (para comparar)
+      NoVertice *vAux = primeiroVertice;
+      while (vAux != nullptr) {
+        int idDestino = vAux->getIdVertice();
+
+        // Se forem vértices diferentes, checamos aresta(s)
+        if (idOrigem != idDestino) {
+          // Para grafo não dirigido, basta existir uma aresta (origem->destino)
+          // Para grafo dirigido, precisamos origem->destino e destino->origem
+          bool existeOD = existeAresta(idOrigem, idDestino);
+          if (!existeOD) {
+            return false; // Faltou aresta
+          }
+
+          // Se for dirigido, também checamos a aresta oposta
+          if (this->direcionado) {
+            bool existeDO = existeAresta(idDestino, idOrigem);
+            if (!existeDO) {
+              return false; // Faltou a aresta contrária
+            }
+          }
+        }
+
+        vAux = vAux->getProximoVertice();
+      }
+
+      vAtual = vAtual->getProximoVertice();
+    }
+    // Se todas as checagens passaram, é completo
+    return true;
   }
 
   bool eh_arvore() override {
