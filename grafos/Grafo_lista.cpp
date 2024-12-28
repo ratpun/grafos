@@ -243,8 +243,34 @@ public:
   }
 
   int n_conexo() override {
-    // Implementar função que indica a quantidade de componentes conexas
-    return 0;
+    // Aloca dinamicamente o array de visitados
+    bool *visitado = new bool[numVertices + 1];
+    for (int i = 1; i <= numVertices; i++) {
+      visitado[i] = false; // Inicializa todos como não visitados
+    }
+
+    // Contador de componentes conexas
+    int componentesConexas = 0;
+
+    // Percorre todos os vértices
+    NoVertice *vAtual = primeiroVertice;
+    while (vAtual != nullptr) {
+      int idVertice = vAtual->getIdVertice();
+
+      // Se o vértice ainda não foi visitado, ele é parte de uma nova componente
+      if (!visitado[idVertice]) {
+        componentesConexas++;
+        // Faz uma busca (DFS) para marcar todos os vértices conectados a este
+        dfs_marcar_componente(idVertice, visitado);
+      }
+
+      vAtual = vAtual->getProximoVertice();
+    }
+
+    // Libera o array alocado dinamicamente
+    delete[] visitado;
+
+    return componentesConexas;
   }
 
   int get_grau() override {
@@ -409,6 +435,79 @@ private:
       delete vDel;
     }
     primeiroVertice = nullptr;
+  }
+
+  struct NoLista {
+    int idVertice;
+    NoLista *proximo;
+
+    NoLista(int id) : idVertice(id), proximo(nullptr) {}
+  };
+
+  NoLista *getVizinhosIgnorandoDirecao(int idVert) {
+    NoLista *vizinhos = nullptr; // Lista encadeada para armazenar vizinhos
+
+    // Arestas de saída (idVert -> destino)
+    NoVertice *vOrigem = encontraVertice(idVert);
+    if (vOrigem != nullptr) {
+      NoAresta *aAtual = vOrigem->getPrimeiraAresta();
+      while (aAtual != nullptr) {
+        // Adiciona destino à lista de vizinhos
+        NoLista *novoVizinho = new NoLista(aAtual->getIdVertice());
+        novoVizinho->proximo = vizinhos;
+        vizinhos = novoVizinho;
+        aAtual = aAtual->getProxima();
+      }
+    }
+
+    // Se o grafo for direcionado, precisamos adicionar também as arestas de
+    // entrada (x -> idVert)
+    if (this->direcionado) {
+      NoVertice *vAtual = primeiroVertice;
+      while (vAtual != nullptr) {
+        NoAresta *aAtual = vAtual->getPrimeiraAresta();
+        while (aAtual != nullptr) {
+          if (aAtual->getIdVertice() == idVert) {
+            // Adiciona origem à lista de vizinhos
+            NoLista *novoVizinho = new NoLista(vAtual->getIdVertice());
+            novoVizinho->proximo = vizinhos;
+            vizinhos = novoVizinho;
+          }
+          aAtual = aAtual->getProxima();
+        }
+        vAtual = vAtual->getProximoVertice();
+      }
+    }
+
+    return vizinhos; // Retorna a lista encadeada de vizinhos
+  }
+
+  void liberarLista(NoLista *lista) {
+    while (lista != nullptr) {
+      NoLista *temp = lista;
+      lista = lista->proximo;
+      delete temp;
+    }
+  }
+
+  void dfs_marcar_componente(int idVertice, bool visitado[]) {
+    // Marca o vértice atual como visitado
+    visitado[idVertice] = true;
+
+    // Obtém a lista de vizinhos
+    NoLista *vizinhos = getVizinhosIgnorandoDirecao(idVertice);
+
+    // Percorre os vizinhos
+    NoLista *atual = vizinhos;
+    while (atual != nullptr) {
+      if (!visitado[atual->idVertice]) {
+        dfs_marcar_componente(atual->idVertice, visitado);
+      }
+      atual = atual->proximo;
+    }
+
+    // Libera a memória da lista de vizinhos
+    liberarLista(vizinhos);
   }
 };
 
