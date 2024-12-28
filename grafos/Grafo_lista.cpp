@@ -356,8 +356,59 @@ public:
   }
 
   bool possui_articulacao() override {
-    // Implementar função que diz se existe ao menos um vertice de articulação
-    return false;
+    // Arrays para DFS
+    int *disc = new int[numVertices + 1];
+    int *low = new int[numVertices + 1];
+    bool *visitado = new bool[numVertices + 1];
+    int *pai = new int[numVertices + 1];
+    bool *articulacao = new bool[numVertices + 1];
+
+    // Inicializa os arrays
+    for (int i = 1; i <= numVertices; i++) {
+      disc[i] = -1;
+      low[i] = -1;
+      visitado[i] = false;
+      pai[i] = -1;
+      articulacao[i] = false;
+    }
+
+    // Tempo de descoberta inicial
+    int tempo = 0;
+
+    // Percorre todos os vértices
+    NoVertice *vAtual = primeiroVertice;
+    while (vAtual != nullptr) {
+      int idVertice = vAtual->getIdVertice();
+      if (!visitado[idVertice]) {
+        int filhosRaiz = 0; // Número de filhos da raiz na DFS
+        dfs_articulacao(idVertice, tempo, disc, low, visitado, pai, articulacao,
+                        filhosRaiz);
+
+        // Verifica se a raiz da DFS é articulação
+        if (filhosRaiz > 1) {
+          articulacao[idVertice] = true;
+        }
+      }
+      vAtual = vAtual->getProximoVertice();
+    }
+
+    // Verifica se existe pelo menos um vértice de articulação
+    bool existeArticulacao = false;
+    for (int i = 1; i <= numVertices; i++) {
+      if (articulacao[i]) {
+        existeArticulacao = true;
+        break;
+      }
+    }
+
+    // Libera memória
+    delete[] disc;
+    delete[] low;
+    delete[] visitado;
+    delete[] pai;
+    delete[] articulacao;
+
+    return existeArticulacao;
   }
 
   bool possui_ponte() override {
@@ -580,6 +631,55 @@ private:
     liberarLista(vizinhos);
 
     return false; // Nenhum ciclo detectado
+  }
+
+  void dfs_articulacao(int u, int &tempo, int disc[], int low[],
+                       bool visitado[], int pai[], bool articulacao[],
+                       int &filhosRaiz) {
+    // Marca o vértice como visitado
+    visitado[u] = true;
+
+    // Inicializa discovery time e low-link value
+    disc[u] = low[u] = ++tempo;
+
+    // Conta filhos da raiz apenas se o vértice atual for a raiz
+    bool isRoot = (pai[u] == -1);
+    if (isRoot) {
+      filhosRaiz = 0;
+    }
+
+    // Percorre os vizinhos
+    NoLista *vizinhos = getVizinhosIgnorandoDirecao(u);
+    NoLista *atual = vizinhos;
+    while (atual != nullptr) {
+      int v = atual->idVertice;
+
+      if (!visitado[v]) {
+        if (isRoot) {
+          filhosRaiz++;
+        }
+        pai[v] = u;
+
+        // Realiza a DFS recursivamente
+        dfs_articulacao(v, tempo, disc, low, visitado, pai, articulacao,
+                        filhosRaiz);
+
+        // Atualiza o low-link value do vértice atual
+        low[u] = min(low[u], low[v]);
+
+        // Verifica condição de articulação para vértices não raiz
+        if (!isRoot && low[v] >= disc[u]) {
+          articulacao[u] = true;
+        }
+      } else if (v != pai[u]) {
+        // Atualiza low-link value para aresta de retorno
+        low[u] = min(low[u], disc[v]);
+      }
+
+      atual = atual->proximo;
+    }
+
+    liberarLista(vizinhos);
   }
 };
 
