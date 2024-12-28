@@ -341,10 +341,18 @@ public:
   }
 
   bool eh_arvore() override {
-    // Implementar função que diz se o grafo é uma árvore
-    // Uma maneira simples: verificar se é conexo e se (número de arestas =
-    // número de vértices - 1)
-    return false;
+    // Verifica se o grafo é conectado
+    if (n_conexo() != 1) {
+      return false; // Não é uma árvore se não for conectado
+    }
+
+    // Verifica se há ciclos no grafo
+    if (tem_ciclo()) {
+      return false; // Não é uma árvore se houver ciclos
+    }
+
+    // Se é conectado e não possui ciclos, é uma árvore
+    return true;
   }
 
   bool possui_articulacao() override {
@@ -508,6 +516,70 @@ private:
 
     // Libera a memória da lista de vizinhos
     liberarLista(vizinhos);
+  }
+
+  bool tem_ciclo() {
+    // Array para marcar vértices visitados
+    bool *visitado = new bool[numVertices + 1];
+    for (int i = 1; i <= numVertices; i++) {
+      visitado[i] = false;
+    }
+
+    // Percorre todos os vértices
+    NoVertice *vAtual = primeiroVertice;
+    while (vAtual != nullptr) {
+      int idVertice = vAtual->getIdVertice();
+
+      // Se o vértice ainda não foi visitado, inicia uma busca para detectar
+      // ciclos
+      if (!visitado[idVertice]) {
+        if (dfs_detecta_ciclo(idVertice, visitado, -1)) {
+          delete[] visitado;
+          return true; // Ciclo detectado
+        }
+      }
+
+      vAtual = vAtual->getProximoVertice();
+    }
+
+    // Libera a memória do array
+    delete[] visitado;
+
+    return false; // Nenhum ciclo encontrado
+  }
+
+  bool dfs_detecta_ciclo(int idVertice, bool visitado[], int pai) {
+    // Marca o vértice atual como visitado
+    visitado[idVertice] = true;
+
+    // Obtém a lista de vizinhos
+    NoLista *vizinhos = getVizinhosIgnorandoDirecao(idVertice);
+
+    // Percorre os vizinhos
+    NoLista *atual = vizinhos;
+    while (atual != nullptr) {
+      int vizinho = atual->idVertice;
+
+      // Se o vizinho não foi visitado, faz a busca recursiva
+      if (!visitado[vizinho]) {
+        if (dfs_detecta_ciclo(vizinho, visitado, idVertice)) {
+          liberarLista(vizinhos);
+          return true; // Ciclo detectado
+        }
+      }
+      // Se o vizinho foi visitado e não é o pai, detectamos um ciclo
+      else if (vizinho != pai) {
+        liberarLista(vizinhos);
+        return true;
+      }
+
+      atual = atual->proximo;
+    }
+
+    // Libera a memória da lista de vizinhos
+    liberarLista(vizinhos);
+
+    return false; // Nenhum ciclo detectado
   }
 };
 
