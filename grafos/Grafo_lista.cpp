@@ -202,7 +202,43 @@ public:
   }
 
   bool eh_bipartido() override {
-    // Implementar a "força bruta" mencionada nas especificações.
+    // Essa seria a forma mais "Força bruta", porém o BFS/DFS de coloração é
+    // muito mais comum e eficiente e pode ser considerado força bruta. Supondo
+    // IDs de 1..numVertices consecutivos Percorremos de 0 até (2^numVertices -
+    // 1) Cada bit i do número mascara a cor do vértice i.
+
+    for (unsigned long mascara = 0; mascara < (1UL << numVertices); mascara++) {
+      // "mascara" define uma atribuição de cores
+      // se bit i = 0 => cor 0, se bit i = 1 => cor 1.
+
+      bool ok = true; // assume que a atribuição atual é válida
+
+      // Verifica se há aresta (u->v) com u e v mesma cor
+      NoVertice *uV = primeiroVertice;
+      while (uV != nullptr && ok) {
+        int u = uV->getIdVertice();
+        NoAresta *a = uV->getPrimeiraAresta();
+        while (a != nullptr) {
+          int v = a->getIdVertice();
+          // Cores de u e v
+          int corU = ((mascara >> (u - 1)) & 1);
+          int corV = ((mascara >> (v - 1)) & 1);
+          if (corU == corV) {
+            // Há uma aresta ligando vértices da mesma cor
+            ok = false;
+            break;
+          }
+          a = a->getProxima();
+        }
+        uV = uV->getProximoVertice();
+      }
+
+      if (ok) {
+        return true; // Achamos uma partição que funciona
+      }
+    }
+
+    // Se nenhuma funcionou
     return false;
   }
 
@@ -234,6 +270,7 @@ public:
   bool eh_direcionado() override { return direcionado; }
   bool vertice_ponderado() override { return verticesPonderados; }
   bool aresta_ponderada() override { return arestasPonderadas; }
+
   bool eh_completo() override {
     // Se tem 0 ou 1 vértice, podemos considerar "completo" por definição
     if (numVertices <= 1) {
