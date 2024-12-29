@@ -114,21 +114,19 @@ public:
 
   void novo_grafo(const string &descricao,
                   const string &arquivoSaida) override {
-
     ifstream fin(descricao.c_str());
     if (!fin.is_open()) {
       cerr << "Erro ao abrir arquivo de descrição " << descricao << endl;
       return;
     }
 
-    fin >> numVertices >> numArestas;
-    int dir, compConexas, vPond, aPond, completo, bipartido, arvore, aPonte,
-        vArti;
-    fin >> dir >> compConexas >> vPond >> aPond >> completo >> bipartido >>
-        arvore >> aPonte >> vArti;
+    // Lê os parâmetros
+    int grau, ordem, dir, compConexas, vPond, aPond, completo, bipartido,
+        arvore, aPonte, vArti;
+    fin >> grau >> ordem >> dir >> compConexas >> vPond >> aPond >> completo >>
+        bipartido >> arvore >> aPonte >> vArti;
 
-    //  AINDA É NECESSARIO TRATAR OS OUTROS
-    //  PARAMETROS DE ENTRADA!!
+    // Configura o grafo
     direcionado = (dir == 1);
     verticesPonderados = (vPond == 1);
     arestasPonderadas = (aPond == 1);
@@ -138,25 +136,115 @@ public:
     // Limpar qualquer dado antigo
     limpaGrafo();
 
-    // Gerar vértices aleatórios (por exemplo, pesos aleatórios)
+    // Gerar vértices
     srand((unsigned)time(nullptr));
-    for (int i = 0; i < numVertices; i++) {
+    for (int i = 0; i < ordem; i++) {
       double peso = (verticesPonderados) ? (double)(rand() % 10 + 1) : 1.0;
       insereVertice(i + 1, peso);
     }
 
-    // Gerar arestas aleatórias
-    int contadorArestas = 0;
-    while (contadorArestas < numArestas) {
-      int origem = rand() % numVertices;
-      int destino = rand() % numVertices;
-      if (origem == destino)
-        continue; // evita laço
-      // Checar se aresta já existe (evitar múltiplas arestas)
-      if (!existeAresta(origem, destino)) {
-        double pesoA = (arestasPonderadas) ? (double)(rand() % 10 + 1) : 1.0;
-        insereAresta(origem, destino, pesoA);
-        contadorArestas++;
+    // Arrays para dividir conjuntos (bipartido) e componentes conexas
+    int *conjuntoA = nullptr;
+    int *conjuntoB = nullptr;
+    if (bipartido) {
+      conjuntoA =
+          new int[(ordem + 1) / 2];   // Metade dos vértices (aproximadamente)
+      conjuntoB = new int[ordem / 2]; // Outra metade dos vértices
+    }
+
+    // Gerar arestas de acordo com as restrições
+    if (completo) {
+      // Grafo completo: Conectar todos os pares de vértices
+      for (int i = 1; i <= ordem; i++) {
+        for (int j = i + 1; j <= ordem; j++) {
+          if (!direcionado) {
+            insereAresta(i, j,
+                         arestasPonderadas ? (double)(rand() % 10 + 1) : 1.0);
+          } else {
+            insereAresta(i, j,
+                         arestasPonderadas ? (double)(rand() % 10 + 1) : 1.0);
+            insereAresta(j, i,
+                         arestasPonderadas ? (double)(rand() % 10 + 1) : 1.0);
+          }
+        }
+      }
+    } else if (arvore) {
+      // Grafo como uma árvore: Gerar n-1 arestas
+      int *vertices = new int[ordem];
+      for (int i = 0; i < ordem; i++) {
+        vertices[i] = i + 1;
+      }
+
+      // Embaralhar os vértices
+      for (int i = ordem - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
+        swap(vertices[i], vertices[j]);
+      }
+
+      for (int i = 1; i < ordem; i++) {
+        int origem = vertices[i - 1];
+        int destino = vertices[i];
+        insereAresta(origem, destino,
+                     arestasPonderadas ? (double)(rand() % 10 + 1) : 1.0);
+      }
+
+      delete[] vertices;
+    } else if (bipartido) {
+      // Grafo bipartido: Dividir vértices em dois conjuntos e conectar os
+      // conjuntos
+      int tamanhoA = 0, tamanhoB = 0;
+
+      for (int i = 1; i <= ordem; i++) {
+        if (i % 2 == 0) {
+          conjuntoA[tamanhoA++] = i;
+        } else {
+          conjuntoB[tamanhoB++] = i;
+        }
+      }
+
+      for (int i = 0; i < tamanhoA; i++) {
+        for (int j = 0; j < tamanhoB; j++) {
+          if (rand() % 2 == 0) {
+            insereAresta(conjuntoA[i], conjuntoB[j],
+                         arestasPonderadas ? (double)(rand() % 10 + 1) : 1.0);
+          }
+        }
+      }
+
+      delete[] conjuntoA;
+      delete[] conjuntoB;
+    } else {
+      // Grafo aleatório com grau e componentes conexas
+      int tamanhoComp = ordem / compConexas;
+      int **componentes = new int *[compConexas];
+      for (int i = 0; i < compConexas; i++) {
+        componentes[i] = new int[tamanhoComp];
+        for (int j = 0; j < tamanhoComp; j++) {
+          componentes[i][j] = j + 1 + (i * tamanhoComp);
+        }
+      }
+
+      for (int i = 0; i < compConexas; i++) {
+        for (int u = 0; u < tamanhoComp; u++) {
+          for (int k = 0; k < grau; k++) {
+            int v = componentes[i][rand() % tamanhoComp];
+            if (componentes[i][u] != v && !existeAresta(componentes[i][u], v)) {
+              insereAresta(componentes[i][u], v,
+                           arestasPonderadas ? (double)(rand() % 10 + 1) : 1.0);
+            }
+          }
+        }
+        delete[] componentes[i];
+      }
+
+      delete[] componentes;
+    }
+
+    // Garantir que exista uma ponte (se necessário)
+    if (aPonte) {
+      int u = 1, v = 2;
+      if (!existeAresta(u, v)) {
+        insereAresta(u, v, arestasPonderadas ? (double)(rand() % 10 + 1) : 1.0);
       }
     }
 
@@ -166,13 +254,11 @@ public:
       cerr << "Erro ao criar arquivo de saída " << arquivoSaida << endl;
       return;
     }
-    // Formato de saída (deve ser igual ao usado em carrega_grafo acima):
 
-    fout << numVertices << " " << (direcionado ? 1 : 0) << " "
+    fout << ordem << " " << (direcionado ? 1 : 0) << " "
          << (verticesPonderados ? 1 : 0) << " " << (arestasPonderadas ? 1 : 0)
          << endl;
 
-    // Escreve pesos dos vértices (se houver)
     if (verticesPonderados) {
       NoVertice *vAtual = primeiroVertice;
       while (vAtual != nullptr) {
@@ -182,8 +268,6 @@ public:
       fout << endl;
     }
 
-    // Escreve as arestas
-    // Para cada vértice, varremos sua lista de adjacência
     NoVertice *vAtual = primeiroVertice;
     while (vAtual != nullptr) {
       NoAresta *aAtual = vAtual->getPrimeiraAresta();
@@ -699,7 +783,7 @@ private:
                         filhosRaiz);
 
         // Atualiza o low-link value do vértice atual
-        low[u] = min(low[u], low[v]);
+        low[u] = std::min(low[u], low[v]);
 
         // Verifica condição de articulação para vértices não raiz
         if (!isRoot && low[v] >= disc[u]) {
@@ -707,7 +791,7 @@ private:
         }
       } else if (v != pai[u]) {
         // Atualiza low-link value para aresta de retorno
-        low[u] = min(low[u], disc[v]);
+        low[u] = std::min(low[u], disc[v]);
       }
 
       atual = atual->proximo;
