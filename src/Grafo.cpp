@@ -26,6 +26,6 @@ void Grafo::leitorDeGrafo(const string& Path)
     ordem = stoi(token);
 
     getline(ss, token, ' ');
-
+    
 
 }
