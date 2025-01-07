@@ -339,6 +339,24 @@ void Grafo_matriz::dfs(int vertice, bool *visitado)
     }
 }
 
+bool Grafo_matriz::eh_completo()
+{
+    // Itera sobre todos os pares de vértices na matriz
+    for (int i = 0; i < numVertices; ++i)
+    {
+        for (int j = 0; j < numVertices; ++j)
+        {
+            // Se i != j e não há uma aresta entre i e j, o grafo não é completo
+            if (i != j && matriz[i][j] == 0)
+            {
+                return false;
+            }
+        }
+    }
+    // Se passou por todos os pares sem encontrar ausência de aresta, é completo
+    return true;
+}
+
 
 
 

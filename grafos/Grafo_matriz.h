@@ -42,7 +42,7 @@ public:
 
     // Cria um novo grafo a partir de uma descrição
     void novo_grafo(const std::string &descricao, const std::string &arquivoSaida);
-    
+
     // Limpa qualquer dado antigo
     void limpaGrafo();
 
@@ -57,6 +57,9 @@ public:
 
     // Realiza a marcação de componentes visitados
     void dfs(int vertice, bool *visitado);
+
+    // Verifica se o grafo é completo ou não
+    bool eh_completo();
 };
 
 #endif // GRAFO_MATRIZ_H
