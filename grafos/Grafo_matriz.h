@@ -63,6 +63,12 @@ public:
 
     // Verifica se o grafo possui ponte
     bool possui_ponte();
+
+    // Verifica se as arestas do grafo são ponderadas
+    bool aresta_ponderada();
+
+    // Verifica se os vértices do grafo são ponderados
+    bool vertice_ponderado();
 };
 
 #endif // GRAFO_MATRIZ_H

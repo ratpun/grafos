@@ -415,6 +415,15 @@ bool Grafo_matriz::possui_ponte()
     return false;
 }
 
+bool Grafo_matriz::aresta_ponderada()
+{
+    return arestasPonderadas;
+}
+
+bool Grafo_matriz::vertice_ponderado()
+{
+    return verticesPonderados;
+}
 
 
 
