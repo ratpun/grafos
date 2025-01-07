@@ -357,6 +357,63 @@ bool Grafo_matriz::eh_completo()
     return true;
 }
 
+bool Grafo_matriz::possui_ponte()
+{
+    for (int u = 0; u < numVertices; ++u)
+    {
+        for (int v = 0; v < numVertices; ++v)
+        {
+            // Verifica se há uma aresta entre u e v
+            if (matriz[u][v] != 0)
+            {
+                // Remove a aresta temporariamente
+                double pesoOriginal = matriz[u][v];
+                matriz[u][v] = 0;
+                if (!direcionado)
+                {
+                    matriz[v][u] = 0;
+                }
+
+                // Verifica se o grafo continua conexo
+                bool *visitado = new bool[numVertices];
+                for (int i = 0; i < numVertices; ++i)
+                {
+                    visitado[i] = false;
+                }
+
+                // Realiza a DFS a partir de um vértice válido
+                dfs(0, visitado);
+
+                // Checa se há vértices desconexos
+                bool desconexo = false;
+                for (int i = 0; i < numVertices; ++i)
+                {
+                    if (!visitado[i])
+                    {
+                        desconexo = true;
+                        break;
+                    }
+                }
+
+                delete[] visitado;
+
+                // Restaura a aresta
+                matriz[u][v] = pesoOriginal;
+                if (!direcionado)
+                {
+                    matriz[v][u] = pesoOriginal;
+                }
+
+                // Se a remoção causou desconexão, temos uma ponte
+                if (desconexo)
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
 
 
 

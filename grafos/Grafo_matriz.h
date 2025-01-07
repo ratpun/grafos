@@ -60,6 +60,9 @@ public:
 
     // Verifica se o grafo é completo ou não
     bool eh_completo();
+
+    // Verifica se o grafo possui ponte
+    bool possui_ponte();
 };
 
 #endif // GRAFO_MATRIZ_H
