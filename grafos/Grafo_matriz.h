@@ -10,7 +10,8 @@
 class Grafo_matriz : public Grafo
 {
 private:
-    int numNos;              // Número de vértices no grafo
+    int numNos;             // Número de vértices no grafo
+    float *pesoNos;          //vetor de peso para vertices
     bool direcionado;        // Flag para indicar se o grafo é direcionado
     bool verticesPonderados; // Flag para indicar se os vértices têm peso
     bool arestasPonderadas;  // Flag para indicar se as arestas têm peso

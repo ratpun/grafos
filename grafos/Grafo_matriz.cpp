@@ -22,6 +22,9 @@ Grafo_matriz::Grafo_matriz(int n, bool dir, bool pondArestas, bool pondVertices)
     arestas_ponderadas = pondArestas;
     vertices_ponderados = pondVertices;
 
+    // Alocação dos pesos de cada vertices.
+    pesoNos = new float[numNos];
+
     // Alocação da matriz de adjacência
     matriz = new double *[numNos];
     for (int i = 0; i < numNos; i++)
@@ -43,6 +46,61 @@ Grafo_matriz::~Grafo_matriz()
         delete[] matriz[i];
     }
     delete[] matriz;
+
+    //Desaloca os pesos de cada vertice.
+
+    delete[] pesoNos;
+}
+
+void Grafo_matriz::insereVertice(int id, double peso)
+{
+    if (id < 0 || id >= numVertices) 
+    {
+        cerr << "ID do vértice inválido." << std::endl;
+        return;
+    }
+    if (verticesPonderados) 
+    {
+        pesoNos[id] = peso;
+    }
+}
+
+void Grafo_matriz::adicionaAresta(int origem, int destino, double peso) 
+{
+    if (origem < 0 || origem >= numVertices || destino < 0 || destino >= numVertices) 
+    {
+        std::cerr << "Origem ou destino inválido." << std::endl;
+        return;
+    }
+
+    matriz[origem][destino] = peso;
+
+    if (!direcionado) 
+    {
+        matriz[destino][origem] = peso;
+    }
+}
+
+bool Grafo_matriz::existeAresta(int origem, int destino) 
+{
+    if (origem < 0 || origem >= numVertices || destino < 0 || destino >= numVertices) 
+    {
+        return false;
+    }
+
+    return matriz[origem][destino] != 0;
+}
+
+void Grafo_matriz::dfs_marcar_componente(int vertice, bool *visitado) 
+{
+    visitado[vertice] = true;
+    for (int i = 0; i < numVertices; i++) 
+    {
+        if (matriz[vertice][i] != 0 && !visitado[i]) 
+        {
+            dfs_marcar_componente(i, visitado);
+        }
+    }
 }
 
 void Grafo_matriz::carrega_grafo(const string &arquivo)
@@ -275,6 +333,27 @@ bool Grafo_matriz::eh_bipartido() {
     delete[] cores; // Libera a memória alocada para cores
     delete[] fila;  // Libera a memória alocada para fila
     return true; // Se conseguiu colorir todos os vértices sem problemas, é bipartido
+}
+
+int Grafo_matriz::n_conexo() 
+{
+    bool *visitado = new bool[numVertices];
+    for (int i = 0; i < numVertices; i++) 
+    {
+        visitado[i] = false;
+    }
+    numComponentes = 0;
+
+    for (int i = 0; i < numVertices; i++) 
+    {
+        if (!visitado[i]) 
+        {
+            dfs_marcar_componente(i, visitado);
+            numComponentes++;
+        }
+    }
+    delete[] visitado;
+    return numComponentes;
 }
 
 
