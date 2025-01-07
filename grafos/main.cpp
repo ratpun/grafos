@@ -6,7 +6,7 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 
-  /*
+  /**
    * Formas de execução:
    *
    * Caso 1: ./main.out -d -m grafo.txt
@@ -29,19 +29,19 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  // Lê primeiro argumento: -d ou -c
-  string modo = argv[1]; // "-d" ou "-c"
+  /// Lê primeiro argumento: -d ou -c
+  string modo = argv[1]; /// "-d" ou "-c"
 
-  // Lê segundo argumento: -m ou -l
-  string estrutura = argv[2]; // "-m" ou "-l"
+  /// Lê segundo argumento: -m ou -l
+  string estrutura = argv[2]; /// "-m" ou "-l"
 
-  // Ponteiro para a classe base (grafo)
+  /// Ponteiro para a classe base (grafo)
   Grafo *g = nullptr;
 
-  // == MODO DESCRICAO: -d ==
+  /// == MODO DESCRICAO: -d ==
   if (modo == "-d") {
-    // Verifica se tem ao menos 3 argumentos: -d -m/-l nome_arquivo
-    // argv[3] deve ser o arquivo de grafo
+    /// Verifica se tem ao menos 3 argumentos: -d -m/-l nome_arquivo
+    /// argv[3] deve ser o arquivo de grafo
     if (argc < 4) {
       cerr << "Faltam argumentos para o modo -d.\n";
       return 1;
@@ -49,11 +49,11 @@ int main(int argc, char *argv[]) {
 
     string arquivoGrafo = argv[3];
 
-    // Escolhe a implementação
+    /// Escolhe a implementação
     if (estrutura == "-m") {
-      // g = new Grafo_matriz(0, false, false, false);
-      // Apontar corretamente com os parâmetros certos! Talvez seja interessante
-      // não passar os parametros na criação
+      /// g = new Grafo_matriz(0, false, false, false);
+      /// Apontar corretamente com os parâmetros certos! Talvez seja interessante
+      /// não passar os parametros na criação
     } else if (estrutura == "-l") {
       g = new Grafo_lista();
     } else {
@@ -61,10 +61,10 @@ int main(int argc, char *argv[]) {
       return 1;
     }
 
-    // Carrega o grafo a partir do arquivo
+    /// Carrega o grafo a partir do arquivo
     g->carrega_grafo(arquivoGrafo);
 
-    // Exibe as propriedades do grafo
+    /// Exibe as propriedades do grafo
     cout << arquivoGrafo << "\n";
     cout << "Grau: " << g->get_grau() << "\n";
     cout << "Ordem: " << g->get_ordem() << "\n";
@@ -81,20 +81,20 @@ int main(int argc, char *argv[]) {
     cout << "Vertice de Articulacao: "
          << (g->possui_articulacao() ? "Sim" : "Não") << "\n";
   }
-  // == MODO CRIACAO: -c ==
+  /// == MODO CRIACAO: -c ==
   else if (modo == "-c") {
-    // Verifica se tem ao menos 5 argumentos: -c -m/-l descricao.txt grafo.txt
+    /// Verifica se tem ao menos 5 argumentos: -c -m/-l descricao.txt grafo.txt
     if (argc < 5) {
       cerr << "Faltam argumentos para o modo -c.\n";
       return 1;
     }
 
-    string arquivoDesc = argv[3];  // descricao.txt
-    string arquivoGrafo = argv[4]; // grafo.txt
+    string arquivoDesc = argv[3];  /// descricao.txt
+    string arquivoGrafo = argv[4]; /// grafo.txt
 
-    // Escolhe a implementação
+    /// Escolhe a implementação
     if (estrutura == "-m") {
-      // g = new grafo_matriz(); // Apontar corretamente com os parâmetros!
+      /// g = new grafo_matriz(); /// Apontar corretamente com os parâmetros!
     } else if (estrutura == "-l") {
       g = new Grafo_lista();
     } else {
@@ -102,8 +102,8 @@ int main(int argc, char *argv[]) {
       return 1;
     }
 
-    // Gera um novo grafo aleatório (com base no arquivo de descrição) e salva
-    // em arquivoGrafo
+    /// Gera um novo grafo aleatório (com base no arquivo de descrição) e salva
+    /// em arquivoGrafo
     g->novo_grafo(arquivoDesc, arquivoGrafo);
 
     cout << "Grafo criado e salvo em " << arquivoGrafo << endl;
@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  // Desaloca o grafo, caso tenha sido criado
+  /// Desaloca o grafo, caso tenha sido criado
   delete g;
 
   cout << "Finalizado" << endl;

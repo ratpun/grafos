@@ -5,19 +5,25 @@
 #include <iostream>
 #include <string>
 
-class Grafo {
+/**
+ * @brief Classe base para o grafo
+ * 
+ */
+
+class Grafo
+{
 protected:
-  int numNos = 0;           // Indica o número de nós do grafo
-  bool direcionado = false; // Indica se o grafo é direcionado
+  int numNos = 0;           /// Indica o número de nós do grafo
+  bool direcionado = false; /// Indica se o grafo é direcionado
   bool arestas_ponderadas =
-      false; // Indica se as arestas do grafo são ponderadas
+      false; /// Indica se as arestas do grafo são ponderadas
   bool vertices_ponderados =
-      false; // Indica se os vértices do grafo são ponderados
+      false; /// Indica se os vértices do grafo são ponderados
 
 public:
   Grafo() = default;
   virtual ~Grafo() = default;
-  //   virtual void imprimir();
+  ///   virtual void imprimir();
   virtual bool eh_bipartido() = 0;
   virtual int n_conexo() = 0;
   virtual int get_grau() = 0;

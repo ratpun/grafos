@@ -5,13 +5,13 @@
 
 class NoVertice {
 private:
-  int idVertice;      ///< Identificador único do vértice
-  double pesoVertice; ///< Peso do vértice (caso o grafo seja ponderado nos
-                      ///< vértices)
-  NoAresta *primeiraAresta;  ///< Ponteiro para a primeira aresta da lista de
-                             ///< adjacência
-  NoVertice *proximoVertice; ///< Ponteiro para o próximo vértice (lista
-                             ///< encadeada de vértices)
+  int idVertice;      /// Identificador único do vértice
+  double pesoVertice; /// Peso do vértice (caso o grafo seja ponderado nos
+                      /// vértices)
+  NoAresta *primeiraAresta;  /// Ponteiro para a primeira aresta da lista de
+                             /// adjacência
+  NoVertice *proximoVertice; /// Ponteiro para o próximo vértice (lista
+                             /// encadeada de vértices)
 
 public:
   NoVertice(int idVertice, double pesoVertice = 1.0)
