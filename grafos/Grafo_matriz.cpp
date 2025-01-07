@@ -91,18 +91,6 @@ bool Grafo_matriz::existeAresta(int origem, int destino)
     return matriz[origem][destino] != 0;
 }
 
-void Grafo_matriz::dfs_marcar_componente(int vertice, bool *visitado) 
-{
-    visitado[vertice] = true;
-    for (int i = 0; i < numVertices; i++) 
-    {
-        if (matriz[vertice][i] != 0 && !visitado[i]) 
-        {
-            dfs_marcar_componente(i, visitado);
-        }
-    }
-}
-
 void Grafo_matriz::carrega_grafo(const string &arquivo)
 {
     ifstream fin(arquivo.c_str());
@@ -334,27 +322,3 @@ bool Grafo_matriz::eh_bipartido() {
     delete[] fila;  // Libera a memória alocada para fila
     return true; // Se conseguiu colorir todos os vértices sem problemas, é bipartido
 }
-
-int Grafo_matriz::n_conexo() 
-{
-    bool *visitado = new bool[numVertices];
-    for (int i = 0; i < numVertices; i++) 
-    {
-        visitado[i] = false;
-    }
-    numComponentes = 0;
-
-    for (int i = 0; i < numVertices; i++) 
-    {
-        if (!visitado[i]) 
-        {
-            dfs_marcar_componente(i, visitado);
-            numComponentes++;
-        }
-    }
-    delete[] visitado;
-    return numComponentes;
-}
-
-
-
