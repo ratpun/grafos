@@ -69,6 +69,9 @@ public:
 
     // Verifica se os vértices do grafo são ponderados
     bool vertice_ponderado();
+
+    // Verifica se o grafo é direcionado
+    bool eh_direcionado();
 };
 
 #endif // GRAFO_MATRIZ_H

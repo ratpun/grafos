@@ -425,6 +425,11 @@ bool Grafo_matriz::vertice_ponderado()
     return verticesPonderados;
 }
 
+bool Grafo_matriz::eh_direcionado()
+{
+    return direcionado;
+}
+
 
 
 
