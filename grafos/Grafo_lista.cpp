@@ -13,12 +13,12 @@ using namespace std;
 
 class Grafo_lista : public Grafo {
 private:
-  NoVertice *primeiroVertice; ///< Ponteiro para o primeiro vértice da lista
-  int numVertices;            ///< Número de vértices (ordem do grafo)
-  int numArestas;             ///< Número de arestas
-  bool direcionado;           ///< Flag que indica se o grafo é direcionado
-  bool verticesPonderados;    ///< Flag que indica se os vértices têm peso
-  bool arestasPonderadas;     ///< Flag que indica se as arestas têm peso
+  NoVertice *primeiroVertice; /// Ponteiro para o primeiro vértice da lista
+  int numVertices;            /// Número de vértices (ordem do grafo)
+  int numArestas;             /// Número de arestas
+  bool direcionado;           /// Flag que indica se o grafo é direcionado
+  bool verticesPonderados;    /// Flag que indica se os vértices têm peso
+  bool arestasPonderadas;     /// Flag que indica se as arestas têm peso
 
 public:
   Grafo_lista()
