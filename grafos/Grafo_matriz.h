@@ -37,22 +37,26 @@ public:
     // Verifica se existe uma aresta entre dois vértices
     bool existeAresta(int origem, int destino);
 
-    // Realiza a marcação dos componentes conexos (DFS)
-    void dfs_marcar_componente(int vertice, bool *visitado);
-
     // Carrega o grafo a partir de um arquivo
     void carrega_grafo(const std::string &arquivo);
 
     // Cria um novo grafo a partir de uma descrição
     void novo_grafo(const std::string &descricao, const std::string &arquivoSaida);
+    
     // Limpa qualquer dado antigo
     void limpaGrafo();
 
     // Verifica se o grafo é bipartido
     bool eh_bipartido();
 
+    // Verifica se o grafo é árvore ou não
+    bool eh_arvore();
+
     // Verifica o número de componentes conexos
     int n_conexo();
+
+    // Realiza a marcação de componentes visitados
+    void dfs(int vertice, bool *visitado);
 };
 
 #endif // GRAFO_MATRIZ_H

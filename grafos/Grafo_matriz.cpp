@@ -277,5 +277,71 @@ bool Grafo_matriz::eh_bipartido() {
     return true; // Se conseguiu colorir todos os vértices sem problemas, é bipartido
 }
 
+bool Grafo_matriz::eh_arvore()
+{
+    // Verifica se o grafo é conexo
+    int componentesConexos = n_conexo();
+    if (componentesConexos > 1)
+    {
+        return false; // Não é árvore se o grafo não for conexo
+    }
+
+    // Verifica se o número de arestas é igual ao número de vértices - 1
+    if (numArestas != numVertices - 1)
+    {
+        return false; // Não é árvore se as arestas não forem exatamente (vértices - 1)
+    }
+
+    // Se for conexo e não tiver ciclo, é uma árvore
+    return true;
+}
+
+int Grafo_matriz::n_conexo()
+{
+    // Inicializa o vetor de visitados
+    bool *visitado = new bool[numVertices];
+    for (int i = 0; i < numVertices; ++i)
+    {
+        visitado[i] = false;
+    }
+
+    int numComponentes = 0;
+
+    // Percorre todos os vértices
+    for (int i = 0; i < numVertices; ++i)
+    {
+        // Se o vértice não foi visitado, é uma nova componente conexa
+        if (!visitado[i])
+        {
+            ++numComponentes; // Incrementa o contador de componentes conexos
+
+            // Realiza a DFS para visitar todos os vértices da componente
+            dfs(i, visitado);
+        }
+    }
+
+    delete[] visitado; // Libera a memória
+    return numComponentes;
+}
+
+void Grafo_matriz::dfs(int vertice, bool *visitado)
+{
+    // Marca o vértice atual como visitado
+    visitado[vertice] = true;
+
+    // Percorre todos os vértices adjacentes
+    for (int i = 0; i < numVertices; ++i)
+    {
+        if (matriz[vertice][i] != 0 && !visitado[i])
+        {
+            dfs(i, visitado); // Chamada recursiva para visitar o vértice adjacente
+        }
+    }
+}
+
+
+
+
+
 
 
