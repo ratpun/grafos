@@ -72,6 +72,12 @@ public:
 
     // Verifica se o grafo é direcionado
     bool eh_direcionado();
+
+    // Retorna o grau do grafo
+    int get_grau();
+
+    // Retorna a ordem do grafo
+    int get_ordem();
 };
 
 #endif // GRAFO_MATRIZ_H

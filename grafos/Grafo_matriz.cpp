@@ -235,32 +235,42 @@ void Grafo_matriz::limpaGrafo()
     numArestas = 0;
 }
 
-bool Grafo_matriz::eh_bipartido() {
-    int* cores = new int[numVertices];  // Array para armazenar as cores
-    for (int i = 0; i < numVertices; i++) {
-        cores[i] = -1;  // -1 indica que o vértice ainda não foi colorido
+bool Grafo_matriz::eh_bipartido()
+{
+    int *cores = new int[numVertices]; // Array para armazenar as cores
+    for (int i = 0; i < numVertices; i++)
+    {
+        cores[i] = -1; // -1 indica que o vértice ainda não foi colorido
     }
 
-    int* fila = new int[numVertices];  // Array para simular a fila
-    int frente = 0; // Índice para a frente da fila
-    int tras = 0;   // Índice para o final da fila
+    int *fila = new int[numVertices]; // Array para simular a fila
+    int frente = 0;                   // Índice para a frente da fila
+    int tras = 0;                     // Índice para o final da fila
 
     // Tenta colorir o grafo usando BFS
-    for (int i = 0; i < numVertices; i++) {
-        if (cores[i] == -1) { // Se o vértice não foi colorido
-            fila[tras++] = i;  // Adiciona o vértice na fila
-            cores[i] = 0;      // Começa com a cor 0 (pode ser qualquer valor)
+    for (int i = 0; i < numVertices; i++)
+    {
+        if (cores[i] == -1)
+        {                     // Se o vértice não foi colorido
+            fila[tras++] = i; // Adiciona o vértice na fila
+            cores[i] = 0;     // Começa com a cor 0 (pode ser qualquer valor)
 
-            while (frente < tras) {
-                int u = fila[frente++];  // Remove o vértice da frente da fila
+            while (frente < tras)
+            {
+                int u = fila[frente++]; // Remove o vértice da frente da fila
 
                 // Verifica os vizinhos de u
-                for (int v = 0; v < numVertices; v++) {
-                    if (matriz[u][v] != 0) { // Se há aresta de u para v
-                        if (cores[v] == -1) { // Se v não foi colorido
+                for (int v = 0; v < numVertices; v++)
+                {
+                    if (matriz[u][v] != 0)
+                    { // Se há aresta de u para v
+                        if (cores[v] == -1)
+                        {                            // Se v não foi colorido
                             cores[v] = 1 - cores[u]; // A cor de v é oposta à de u
-                            fila[tras++] = v;  // Adiciona v na fila
-                        } else if (cores[v] == cores[u]) {
+                            fila[tras++] = v;        // Adiciona v na fila
+                        }
+                        else if (cores[v] == cores[u])
+                        {
                             // Se v e u têm a mesma cor, não é bipartido
                             delete[] cores; // Libera a memória alocada para cores
                             delete[] fila;  // Libera a memória alocada para fila
@@ -274,7 +284,7 @@ bool Grafo_matriz::eh_bipartido() {
 
     delete[] cores; // Libera a memória alocada para cores
     delete[] fila;  // Libera a memória alocada para fila
-    return true; // Se conseguiu colorir todos os vértices sem problemas, é bipartido
+    return true;    // Se conseguiu colorir todos os vértices sem problemas, é bipartido
 }
 
 bool Grafo_matriz::eh_arvore()
@@ -430,7 +440,12 @@ bool Grafo_matriz::eh_direcionado()
     return direcionado;
 }
 
+int Grafo_matriz::get_grau()
+{
+    return numArestas;
+}
 
-
-
-
+int Grafo_matriz::get_ordem()
+{
+    return numVertices;
+}
