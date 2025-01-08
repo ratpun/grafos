@@ -210,7 +210,89 @@ void Grafo_matriz::carrega_grafo(const string &arquivo) {
   fin.close();
 }
 
-bool Grafo_matriz::possui_articulacao() { return false; }
+bool Grafo_matriz::possui_articulacao() {
+
+  if (direcionado) {
+    return false;
+  }
+
+  int *disc = new int[numNos];
+  int *low = new int[numNos];
+  int *parent = new int[numNos];
+  bool *articulation_point = new bool[numNos];
+
+  for (int i = 0; i < numNos; i++) {
+    disc[i] = -1;
+    low[i] = -1;
+    parent[i] = -1;
+    articulation_point[i] = false;
+  }
+
+  int tempo = 0;
+
+  for (int i = 0; i < numNos; i++) {
+    if (disc[i] == -1) {
+      dfs_articulation(i, -1, tempo, disc, low, parent, articulation_point);
+    }
+  }
+
+  bool possui = false;
+  for (int i = 0; i < numNos; i++) {
+    if (articulation_point[i]) {
+      possui = true;
+      break;
+    }
+  }
+
+  delete[] disc;
+  delete[] low;
+  delete[] parent;
+  delete[] articulation_point;
+
+  return possui;
+}
+
+void Grafo_matriz::dfs_articulation(int u, int parentU, int &tempo, int disc[],
+                                    int low[], int parent[],
+                                    bool articulation_point[]) {
+  disc[u] = tempo;
+  low[u] = tempo;
+  tempo++;
+
+  int childCount = 0;
+
+  for (int v = 0; v < numNos; v++) {
+    if (matriz[u][v] == 0) {
+      continue;
+    }
+
+    if (disc[v] == -1) {
+      parent[v] = u;
+      childCount++;
+
+      dfs_articulation(v, u, tempo, disc, low, parent, articulation_point);
+
+      if (low[v] < low[u]) {
+        low[u] = low[v];
+      }
+
+      if (parentU == -1 && childCount > 1) {
+        articulation_point[u] = true;
+      }
+
+      if (parentU != -1 && low[v] >= disc[u]) {
+        articulation_point[u] = true;
+      }
+    }
+
+    else if (v != parentU) {
+
+      if (disc[v] < low[u]) {
+        low[u] = disc[v];
+      }
+    }
+  }
+}
 
 /**
  * @brief Cria um novo grafo a partir de um arquivo de descrição e salva em um

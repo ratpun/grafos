@@ -556,6 +556,10 @@ bool Grafo_lista::eh_arvore() {
  */
 bool Grafo_lista::possui_articulacao() {
 
+  if (direcionado) {
+    return false;
+  }
+
   int *disc = new int[numNos + 1];
   int *low = new int[numNos + 1];
   bool *visitado = new bool[numNos + 1];

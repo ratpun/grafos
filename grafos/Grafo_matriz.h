@@ -65,6 +65,8 @@ public:
   bool possui_articulacao();
   int get_grau();
   int get_ordem();
+  void dfs_articulation(int u, int parentU, int &tempo, int disc[], int low[],
+                        int parent[], bool articulation_point[]);
 };
 
 #endif

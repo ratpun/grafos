@@ -85,6 +85,7 @@ int main(int argc, char *argv[]) {
     string arquivoGrafo = argv[4];
 
     if (estrutura == "-m") {
+      g = new Grafo_matriz(1, 0, false, false);
     } else if (estrutura == "-l") {
       g = new Grafo_lista();
     } else {
