@@ -12,9 +12,9 @@
 using namespace std;
 
 Grafo_lista::Grafo_lista()
-    : primeiroVertice(nullptr), numNos(0), numArestas(0),
-      direcionado(false), verticesPonderados(false),
-      arestasPonderadas(false) {}
+    : primeiroVertice(nullptr), numNos(0), pesoNos(nullptr),
+      direcionado(false), verticesPonderados(false), arestasPonderadas(false),
+      numArestas(0), visitado(nullptr), componentes(nullptr), numComponentes(0) {}
 
 Grafo_lista::~Grafo_lista()
 {
