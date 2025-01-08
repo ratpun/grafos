@@ -9,10 +9,10 @@
  * @class Grafo
  * @brief Classe abstrata que representa um grafo.
  *
- * A classe Grafo fornece uma interface para a representação de grafos, 
- * permitindo a implementação de diferentes tipos de grafos (direcionados, 
- * não direcionados, ponderados, não ponderados, etc.). 
- * Esta classe define métodos virtuais puros que devem ser implementados 
+ * A classe Grafo fornece uma interface para a representação de grafos,
+ * permitindo a implementação de diferentes tipos de grafos (direcionados,
+ * não direcionados, ponderados, não ponderados, etc.).
+ * Esta classe define métodos virtuais puros que devem ser implementados
  * pelas classes derivadas para fornecer funcionalidades específicas.
  *
  * @note Esta classe é abstrata e não pode ser instanciada diretamente.
@@ -30,15 +30,12 @@
  * Indica se os vértices do grafo são ponderados.
  */
 
-class Grafo
-{
+class Grafo {
 protected:
   int numNos = 0;
   bool direcionado = false;
-  bool arestas_ponderadas =
-      false;
-  bool vertices_ponderados =
-      false;
+  bool arestas_ponderadas = false;
+  bool vertices_ponderados = false;
 
 public:
   Grafo() = default;

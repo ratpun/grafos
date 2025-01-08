@@ -1,11 +1,12 @@
 #include "Grafo.h"
 #include "Grafo_lista.cpp"
+#include "Grafo_lista.h"
+#include "Grafo_matriz.cpp"
 #include "Grafo_matriz.h"
 
 using namespace std;
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
 
   /**
    * Formas de execução:
@@ -21,8 +22,7 @@ int main(int argc, char *argv[])
    * grafo.txt.
    */
 
-  if (argc < 4)
-  {
+  if (argc < 4) {
     cerr << "Uso incorreto. Exemplos:\n"
          << "  " << argv[0] << " -d -m grafo.txt\n"
          << "  " << argv[0] << " -d -l grafo.txt\n"
@@ -37,26 +37,20 @@ int main(int argc, char *argv[])
 
   Grafo *g = nullptr;
 
-  if (modo == "-d")
-  {
+  if (modo == "-d") {
 
-    if (argc < 4)
-    {
+    if (argc < 4) {
       cerr << "Faltam argumentos para o modo -d.\n";
       return 1;
     }
 
     string arquivoGrafo = argv[3];
 
-    if (estrutura == "-m")
-    {
-    }
-    else if (estrutura == "-l")
-    {
+    if (estrutura == "-m") {
+      g = new Grafo_matriz(1, 0, false, false);
+    } else if (estrutura == "-l") {
       g = new Grafo_lista();
-    }
-    else
-    {
+    } else {
       cerr << "Estrutura inválida (use -m ou -l).\n";
       return 1;
     }
@@ -80,11 +74,9 @@ int main(int argc, char *argv[])
          << (g->possui_articulacao() ? "Sim" : "Não") << "\n";
   }
 
-  else if (modo == "-c")
-  {
+  else if (modo == "-c") {
 
-    if (argc < 5)
-    {
+    if (argc < 5) {
       cerr << "Faltam argumentos para o modo -c.\n";
       return 1;
     }
@@ -92,15 +84,10 @@ int main(int argc, char *argv[])
     string arquivoDesc = argv[3];
     string arquivoGrafo = argv[4];
 
-    if (estrutura == "-m")
-    {
-    }
-    else if (estrutura == "-l")
-    {
+    if (estrutura == "-m") {
+    } else if (estrutura == "-l") {
       g = new Grafo_lista();
-    }
-    else
-    {
+    } else {
       cerr << "Estrutura inválida (use -m ou -l).\n";
       return 1;
     }
@@ -108,9 +95,7 @@ int main(int argc, char *argv[])
     g->novo_grafo(arquivoDesc, arquivoGrafo);
 
     cout << "Grafo criado e salvo em " << arquivoGrafo << endl;
-  }
-  else
-  {
+  } else {
     cerr << "Modo inválido (use -d ou -c).\n";
     return 1;
   }
