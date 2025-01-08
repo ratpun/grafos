@@ -14,27 +14,17 @@
 class Grafo_matriz : public Grafo
 {
 private:
-    int numNos;             // Número de vértices no grafo
-    float *pesoNos;          //vetor de peso para vertices
-    bool direcionado;        // Flag para indicar se o grafo é direcionado
-    bool verticesPonderados; // Flag para indicar se os vértices têm peso
-    bool arestasPonderadas;  // Flag para indicar se as arestas têm peso
-    double **matriz;         // Matriz de adjacência para representar as arestas e pesos
-    int numArestas;          // Número de arestas no grafo
-    bool *visitado;          // Vetor de visitados para busca em profundidade
-    int *componentes;        // Vetor de componentes conexos
-    int numComponentes;      // Número de componentes conexos
-    int numVertices;         // Número de vértices no grafo
-    int numNos;              /// Número de vértices no grafo
-    bool direcionado;        /// Flag para indicar se o grafo é direcionado
-    bool verticesPonderados; /// Flag para indicar se os vértices têm peso
-    bool arestasPonderadas;  /// Flag para indicar se as arestas têm peso
-    double **matriz;         /// Matriz de adjacência para representar as arestas e pesos
-    int numArestas;          /// Número de arestas no grafo
-    bool *visitado;          /// Vetor de visitados para busca em profundidade
-    int *componentes;        /// Vetor de componentes conexos
-    int numComponentes;      /// Número de componentes conexos
-    int numVertices;         /// Número de vértices no grafo
+int numNos;              // Número de vértices no grafo
+float *pesoNos;          // Vetor de peso para vértices
+bool direcionado;        // Flag para indicar se o grafo é direcionado
+bool verticesPonderados; // Flag para indicar se os vértices têm peso
+bool arestasPonderadas;  // Flag para indicar se as arestas têm peso
+double **matriz;         // Matriz de adjacência para representar as arestas e pesos
+int numArestas;          // Número de arestas no grafo
+bool *visitado;          // Vetor de visitados para busca em profundidade
+int *componentes;        // Vetor de componentes conexos
+int numComponentes;      // Número de componentes conexos
+
 
 public:
     /// Construtor
