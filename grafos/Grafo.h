@@ -5,6 +5,31 @@
 #include <iostream>
 #include <string>
 
+/**
+ * @class Grafo
+ * @brief Classe abstrata que representa um grafo.
+ *
+ * A classe Grafo fornece uma interface para a representação de grafos, 
+ * permitindo a implementação de diferentes tipos de grafos (direcionados, 
+ * não direcionados, ponderados, não ponderados, etc.). 
+ * Esta classe define métodos virtuais puros que devem ser implementados 
+ * pelas classes derivadas para fornecer funcionalidades específicas.
+ *
+ * @note Esta classe é abstrata e não pode ser instanciada diretamente.
+ *
+ * @var int Grafo::numNos
+ * Número de nós (vértices) no grafo.
+ *
+ * @var bool Grafo::direcionado
+ * Indica se o grafo é direcionado.
+ *
+ * @var bool Grafo::arestas_ponderadas
+ * Indica se as arestas do grafo são ponderadas.
+ *
+ * @var bool Grafo::vertices_ponderados
+ * Indica se os vértices do grafo são ponderados.
+ */
+
 class Grafo
 {
 protected:

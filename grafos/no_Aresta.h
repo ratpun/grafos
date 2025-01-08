@@ -1,6 +1,20 @@
 #ifndef NOARESTA_H
 #define NOARESTA_H
 
+/**
+ * @file no_Aresta.h
+ * @brief Definição da classe NoAresta.
+ */
+
+/**
+ * @class NoAresta
+ * @brief Representa um nó de aresta em um grafo.
+ *
+ * Esta classe encapsula as propriedades e comportamentos de um nó de aresta,
+ * incluindo o ID do vértice ao qual se conecta, o peso da aresta e um ponteiro
+ * para o próximo nó de aresta na lista de adjacência.
+ */
+
 class NoAresta
 {
 private:

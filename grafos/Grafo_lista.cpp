@@ -11,11 +11,41 @@
 
 using namespace std;
 
+/**
+ * @brief Constrói um novo objeto Grafo_lista.
+ * 
+ * Este construtor inicializa um novo objeto Grafo_lista com valores padrão:
+ * - primeiroVertice é definido como nullptr.
+ * - numNos é definido como 0.
+ * - pesoNos é definido como nullptr.
+ * - direcionado é definido como false.
+ * - verticesPonderados é definido como false.
+ * - arestasPonderadas é definido como false.
+ * - numArestas é definido como 0.
+ * - visitado é definido como nullptr.
+ * - componentes é definido como nullptr.
+ * - numComponentes é definido como 0.
+ */
 Grafo_lista::Grafo_lista()
-    : primeiroVertice(nullptr), numNos(0), pesoNos(nullptr),
-      direcionado(false), verticesPonderados(false), arestasPonderadas(false),
-      numArestas(0), visitado(nullptr), componentes(nullptr), numComponentes(0) {}
+  : primeiroVertice(nullptr), numNos(0), pesoNos(nullptr),
+    direcionado(false), verticesPonderados(false), arestasPonderadas(false),
+    numArestas(0), visitado(nullptr), componentes(nullptr), numComponentes(0) {}
 
+
+/**
+ * @brief Destrutor da classe Grafo_lista.
+ * 
+ * Este destrutor desaloca toda a memória usada pelo grafo. Ele itera por todos
+ * os vértices e suas respectivas arestas, deletando cada uma para liberar a memória.
+ * 
+ * O processo é o seguinte:
+ * 1. Itera por cada vértice no grafo.
+ * 2. Para cada vértice, itera por suas arestas e deleta cada aresta.
+ * 3. Deleta o próprio vértice.
+ * 
+ * Isso garante que toda a memória alocada dinamicamente para vértices e arestas
+ * seja devidamente liberada quando um objeto Grafo_lista é destruído.
+ */
 Grafo_lista::~Grafo_lista()
 {
 
@@ -37,6 +67,22 @@ Grafo_lista::~Grafo_lista()
   }
 }
 
+/**
+ * @brief Carrega um grafo a partir de um arquivo.
+ *
+ * Esta função lê um grafo de um arquivo especificado e inicializa a estrutura
+ * de dados do grafo com os vértices e arestas lidos. O arquivo deve seguir um
+ * formato específico:
+ * - A primeira linha contém quatro inteiros: o número de nós, um indicador se o
+ *   grafo é direcionado (1 para sim, 0 para não), um indicador se os vértices
+ *   são ponderados (1 para sim, 0 para não), e um indicador se as arestas são
+ *   ponderadas (1 para sim, 0 para não).
+ * - Se os vértices são ponderados, as próximas linhas contêm os pesos dos vértices.
+ * - As linhas seguintes contêm as arestas, cada uma representada por dois inteiros
+ *   (origem e destino) e, se as arestas são ponderadas, um valor de peso.
+ *
+ * @param arquivo O caminho para o arquivo que contém a descrição do grafo.
+ */
 void Grafo_lista::carrega_grafo(const string &arquivo)
 {
   ifstream fin(arquivo.c_str());
@@ -107,6 +153,36 @@ void Grafo_lista::carrega_grafo(const string &arquivo)
   fin.close();
 }
 
+/**
+ * @brief Cria um novo grafo a partir de uma descrição fornecida em um arquivo.
+ *
+ * Esta função lê a descrição de um grafo a partir de um arquivo de entrada,
+ * inicializa o grafo com base nas informações lidas e salva o grafo gerado
+ * em um arquivo de saída.
+ *
+ * @param descricao Caminho para o arquivo de descrição do grafo.
+ * @param arquivoSaida Caminho para o arquivo onde o grafo gerado será salvo.
+ *
+ * O arquivo de descrição deve conter as seguintes informações na primeira linha:
+ * - grau: Grau do grafo.
+ * - ordem: Número de vértices do grafo.
+ * - dir: Indica se o grafo é direcionado (1) ou não (0).
+ * - compConexas: Número de componentes conexas.
+ * - vPond: Indica se os vértices são ponderados (1) ou não (0).
+ * - aPond: Indica se as arestas são ponderadas (1) ou não (0).
+ * - completo: Indica se o grafo é completo (1) ou não (0).
+ * - bipartido: Indica se o grafo é bipartido (1) ou não (0).
+ * - arvore: Indica se o grafo é uma árvore (1) ou não (0).
+ * - aPonte: Indica se o grafo possui uma aresta ponte (1) ou não (0).
+ * - vArti: Indica se o grafo possui um vértice de articulação (1) ou não (0).
+ *
+ * A função cria o grafo de acordo com as especificações lidas e o salva no
+ * arquivo de saída no seguinte formato:
+ * - Primeira linha: ordem, dir, vPond, aPond.
+ * - Se os vértices são ponderados, uma linha com os pesos dos vértices.
+ * - Para cada aresta, uma linha com os vértices de origem e destino e, se
+ *   as arestas são ponderadas, o peso da aresta.
+ */
 void Grafo_lista::novo_grafo(const string &descricao,
                              const string &arquivoSaida)
 {
@@ -310,6 +386,15 @@ void Grafo_lista::novo_grafo(const string &descricao,
   fout.close();
 }
 
+/**
+ * @brief Verifica se o grafo é bipartido.
+ * 
+ * Esta função verifica se o grafo representado pela lista de adjacência é bipartido.
+ * Um grafo é bipartido se seus vértices podem ser divididos em dois conjuntos disjuntos
+ * de forma que nenhum vértice do mesmo conjunto seja adjacente.
+ * 
+ * @return true se o grafo é bipartido, false caso contrário.
+ */
 bool Grafo_lista::eh_bipartido()
 {
 
@@ -349,6 +434,14 @@ bool Grafo_lista::eh_bipartido()
   return false;
 }
 
+/**
+ * @brief Calcula o número de componentes conexas no grafo.
+ *
+ * Esta função percorre o grafo para determinar o número de componentes conexas.
+ * Ela utiliza uma abordagem de busca em profundidade (DFS) para marcar todos os vértices em cada componente.
+ *
+ * @return int O número de componentes conexas no grafo.
+ */
 int Grafo_lista::n_conexo()
 {
 
@@ -380,6 +473,15 @@ int Grafo_lista::n_conexo()
   return componentesConexas;
 }
 
+/**
+ * @brief Calcula o grau máximo do grafo.
+ *
+ * Esta função itera por todos os vértices do grafo e determina o vértice
+ * com o maior número de arestas (grau). O grau de um vértice é o número de
+ * arestas conectadas a ele.
+ *
+ * @return O grau máximo de qualquer vértice no grafo.
+ */
 int Grafo_lista::get_grau()
 {
   int grauMaximo = 0;
@@ -403,26 +505,64 @@ int Grafo_lista::get_grau()
   return grauMaximo;
 }
 
+/**
+ * @brief Obtém a ordem do grafo.
+ * 
+ * Esta função retorna o número de nós (vértices) no grafo.
+ * 
+ * @return int O número de nós no grafo.
+ */
 int Grafo_lista::get_ordem()
 {
   return numNos;
 }
 
+/**
+ * @brief Verifica se o grafo é direcionado.
+ * 
+ * Esta função retorna um valor booleano indicando se o grafo é direcionado.
+ * 
+ * @return true se o grafo for direcionado, false caso contrário.
+ */
 bool Grafo_lista::eh_direcionado()
 {
   return direcionado;
 }
 
+/**
+ * @brief Verifica se os vértices no grafo são ponderados.
+ * 
+ * Esta função retorna um valor booleano indicando se os vértices
+ * no grafo possuem pesos associados.
+ * 
+ * @return true se os vértices são ponderados, false caso contrário.
+ */
 bool Grafo_lista::vertice_ponderado()
 {
   return verticesPonderados;
 }
 
+/**
+ * @brief Verifica se as arestas no grafo são ponderadas.
+ * 
+ * Esta função retorna um valor booleano indicando se as arestas
+ * no grafo possuem pesos associados.
+ * 
+ * @return true se as arestas são ponderadas, false caso contrário.
+ */
 bool Grafo_lista::aresta_ponderada()
 {
   return arestasPonderadas;
 }
 
+/**
+ * @brief Verifica se o grafo é completo.
+ * 
+ * Um grafo é considerado completo se há uma aresta entre cada par de vértices.
+ * Para grafos direcionados, ambas as direções devem ter arestas entre cada par de vértices.
+ * 
+ * @return true se o grafo é completo, false caso contrário.
+ */
 bool Grafo_lista::eh_completo()
 {
 
@@ -469,6 +609,14 @@ bool Grafo_lista::eh_completo()
   return true;
 }
 
+/**
+ * @brief Verifica se o grafo é uma árvore.
+ *
+ * Esta função verifica se o grafo representado pelo objeto Grafo_lista é uma árvore.
+ * Um grafo é considerado uma árvore se for conexo e acíclico.
+ *
+ * @return true se o grafo é uma árvore, false caso contrário.
+ */
 bool Grafo_lista::eh_arvore()
 {
 
@@ -485,6 +633,13 @@ bool Grafo_lista::eh_arvore()
   return true;
 }
 
+/**
+ * @brief Verifica se o grafo possui algum ponto de articulação.
+ *
+ * Um ponto de articulação é um vértice que, se removido, aumenta o número de componentes conectados do grafo.
+ *
+ * @return true se o grafo possui pelo menos um ponto de articulação, false caso contrário.
+ */
 bool Grafo_lista::possui_articulacao()
 {
 
@@ -541,6 +696,21 @@ bool Grafo_lista::possui_articulacao()
   return existeArticulacao;
 }
 
+/**
+ * @brief Realiza a busca em profundidade (DFS) para encontrar pontos de articulação em um grafo.
+ *
+ * Esta função utiliza a busca em profundidade (DFS) para identificar pontos de articulação em um grafo.
+ * Um ponto de articulação é um vértice que, se removido, aumenta o número de componentes conectados do grafo.
+ *
+ * @param u O vértice atual sendo visitado.
+ * @param tempo Referência para o contador de tempo usado para definir a ordem de descoberta dos vértices.
+ * @param disc Array que armazena o tempo de descoberta de cada vértice.
+ * @param low Array que armazena o menor tempo de descoberta alcançável a partir de cada vértice.
+ * @param visitado Array que indica se um vértice foi visitado ou não.
+ * @param pai Array que armazena o pai de cada vértice na árvore DFS.
+ * @param articulacao Array que indica se um vértice é um ponto de articulação.
+ * @param filhosRaiz Referência para o contador de filhos da raiz na árvore DFS.
+ */
 void Grafo_lista::dfs_articulacao(int u, int &tempo, int disc[], int low[],
                                   bool visitado[], int pai[], bool articulacao[],
                                   int &filhosRaiz)
@@ -592,6 +762,15 @@ void Grafo_lista::dfs_articulacao(int u, int &tempo, int disc[], int low[],
   liberarLista(vizinhos);
 }
 
+/**
+ * @brief Verifica se o grafo possui uma ponte.
+ * 
+ * Uma ponte é uma aresta que, se removida, aumenta o número de componentes conectados do grafo.
+ * Esta função utiliza uma busca em profundidade (DFS) para encontrar pontes no grafo.
+ * 
+ * @return true Se o grafo possui pelo menos uma ponte.
+ * @return false Se o grafo não possui nenhuma ponte.
+ */
 bool Grafo_lista::possui_ponte()
 {
 
@@ -636,6 +815,15 @@ bool Grafo_lista::possui_ponte()
   return false;
 }
 
+/**
+ * @brief Insere um novo vértice no grafo.
+ * 
+ * Esta função insere um novo vértice no grafo com um identificador e um peso especificado.
+ * Se um vértice com o mesmo identificador já existir, a função não faz nada.
+ * 
+ * @param id Identificador do vértice a ser inserido.
+ * @param pesoVertice Peso do vértice a ser inserido. O valor padrão é 1.0.
+ */
 void Grafo_lista::insereVertice(int id, double pesoVertice = 1.0)
 {
 
@@ -647,6 +835,19 @@ void Grafo_lista::insereVertice(int id, double pesoVertice = 1.0)
   primeiroVertice = novoV;
 }
 
+/**
+ * @brief Insere uma aresta no grafo.
+ * 
+ * Esta função insere uma aresta entre dois vértices no grafo. Se o grafo não for direcionado,
+ * a aresta será inserida em ambas as direções (origem -> destino e destino -> origem).
+ * 
+ * @param origem O vértice de origem da aresta.
+ * @param destino O vértice de destino da aresta.
+ * @param peso O peso da aresta (valor padrão é 1.0).
+ * 
+ * @note Se a aresta já existir ou se a origem for igual ao destino, a função não fará nada.
+ * @note Se o vértice de origem ou destino não existir, a função não fará nada.
+ */
 void Grafo_lista::insereAresta(int origem, int destino, double peso = 1.0)
 {
 
@@ -671,6 +872,16 @@ void Grafo_lista::insereAresta(int origem, int destino, double peso = 1.0)
   }
 }
 
+/**
+ * @brief Encontra um vértice no grafo pelo seu ID.
+ *
+ * Esta função percorre a lista de vértices do grafo e retorna o vértice
+ * cujo ID corresponde ao valor fornecido. Se nenhum vértice com o ID
+ * especificado for encontrado, a função retorna nullptr.
+ *
+ * @param id O ID do vértice a ser encontrado.
+ * @return Um ponteiro para o vértice encontrado, ou nullptr se não for encontrado.
+ */
 NoVertice *Grafo_lista::encontraVertice(int id)
 {
   NoVertice *vAtual = primeiroVertice;
@@ -685,6 +896,17 @@ NoVertice *Grafo_lista::encontraVertice(int id)
   return nullptr;
 }
 
+
+/**
+ * @brief Verifica se existe uma aresta entre dois vértices no grafo.
+ *
+ * Esta função verifica se existe uma aresta que conecta o vértice de origem ao vértice de destino.
+ *
+ * @param origem O identificador do vértice de origem.
+ * @param destino O identificador do vértice de destino.
+ * @return true Se existe uma aresta entre os vértices de origem e destino.
+ * @return false Se não existe uma aresta entre os vértices de origem e destino.
+ */
 bool Grafo_lista::existeAresta(int origem, int destino)
 {
   NoVertice *vOrigem = encontraVertice(origem);
@@ -702,6 +924,14 @@ bool Grafo_lista::existeAresta(int origem, int destino)
   return false;
 }
 
+/**
+ * @brief Limpa o grafo, removendo todos os vértices e arestas.
+ *
+ * Esta função percorre todos os vértices do grafo e, para cada vértice,
+ * percorre todas as suas arestas, deletando-as. Após deletar todas as arestas
+ * de um vértice, o próprio vértice é deletado. No final, o ponteiro para o
+ * primeiro vértice é definido como nullptr, indicando que o grafo está vazio.
+ */
 void Grafo_lista::limpaGrafo()
 {
   NoVertice *vAtual = primeiroVertice;
@@ -721,6 +951,16 @@ void Grafo_lista::limpaGrafo()
   primeiroVertice = nullptr;
 }
 
+/**
+ * @brief Retorna a lista de vizinhos de um vértice, ignorando a direção das arestas.
+ *
+ * Esta função retorna uma lista de vizinhos de um vértice especificado pelo seu ID,
+ * ignorando a direção das arestas. Se o grafo for direcionado, a função também
+ * considera as arestas que chegam ao vértice.
+ *
+ * @param idVert O ID do vértice cujos vizinhos serão retornados.
+ * @return Um ponteiro para a lista de vizinhos do vértice especificado.
+ */
 Grafo_lista::NoLista *Grafo_lista::getVizinhosIgnorandoDirecao(int idVert)
 {
   Grafo_lista::NoLista *vizinhos = nullptr;
@@ -763,6 +1003,14 @@ Grafo_lista::NoLista *Grafo_lista::getVizinhosIgnorandoDirecao(int idVert)
   return vizinhos;
 }
 
+/**
+ * @brief Libera a memória alocada para uma lista encadeada.
+ * 
+ * Esta função percorre uma lista encadeada de nós do tipo NoLista e libera a memória
+ * alocada para cada nó, evitando vazamentos de memória.
+ * 
+ * @param lista Ponteiro para o primeiro nó da lista encadeada a ser liberada.
+ */
 void Grafo_lista::liberarLista(NoLista *lista)
 {
   while (lista != nullptr)
@@ -773,6 +1021,14 @@ void Grafo_lista::liberarLista(NoLista *lista)
   }
 }
 
+/**
+ * @brief Realiza uma busca em profundidade (DFS) para marcar os vértices de uma componente conexa.
+ * 
+ * Esta função marca todos os vértices que pertencem à mesma componente conexa que o vértice dado.
+ * 
+ * @param idVertice O identificador do vértice inicial.
+ * @param visitado Array booleano que indica se um vértice foi visitado ou não.
+ */
 void Grafo_lista::dfs_marcar_componente(int idVertice, bool visitado[])
 {
 
@@ -793,6 +1049,14 @@ void Grafo_lista::dfs_marcar_componente(int idVertice, bool visitado[])
   liberarLista(vizinhos);
 }
 
+/**
+ * @brief Verifica se o grafo contém um ciclo.
+ *
+ * Esta função percorre todos os vértices do grafo e utiliza uma busca em profundidade (DFS)
+ * para detectar ciclos. Se um ciclo for encontrado, a função retorna true. Caso contrário, retorna false.
+ *
+ * @return true se o grafo contém um ciclo, false caso contrário.
+ */
 bool Grafo_lista::tem_ciclo()
 {
 
@@ -824,6 +1088,19 @@ bool Grafo_lista::tem_ciclo()
   return false;
 }
 
+/**
+ * @brief Realiza uma busca em profundidade (DFS) para detectar ciclos em um grafo.
+ * 
+ * Esta função utiliza a técnica de DFS para verificar se há ciclos no grafo.
+ * Ela marca os vértices visitados e verifica se há uma aresta de retorno que
+ * indica a presença de um ciclo.
+ * 
+ * @param idVertice O identificador do vértice atual sendo visitado.
+ * @param visitado Um array booleano que indica se um vértice foi visitado.
+ * @param pai O identificador do vértice pai do vértice atual.
+ * @return true Se um ciclo for detectado no grafo.
+ * @return false Se nenhum ciclo for detectado no grafo.
+ */
 bool Grafo_lista::dfs_detecta_ciclo(int idVertice, bool visitado[], int pai)
 {
 
@@ -859,6 +1136,20 @@ bool Grafo_lista::dfs_detecta_ciclo(int idVertice, bool visitado[], int pai)
   return false;
 }
 
+/**
+ * @brief Realiza uma busca em profundidade (DFS) para encontrar pontes em um grafo.
+ *
+ * Esta função utiliza a técnica de DFS para identificar pontes em um grafo. Uma ponte é uma aresta que,
+ * se removida, aumenta o número de componentes conectados do grafo.
+ *
+ * @param u O vértice atual sendo visitado.
+ * @param tempo Referência para o tempo de descoberta dos vértices.
+ * @param disc Array que armazena o tempo de descoberta de cada vértice.
+ * @param low Array que armazena o menor tempo de descoberta acessível a partir do vértice.
+ * @param visitado Array que indica se um vértice já foi visitado.
+ * @param pai Ponteiro para o vértice pai no DFS.
+ * @return true se uma ponte foi encontrada, false caso contrário.
+ */
 bool Grafo_lista::dfs_ponte(int u, int &tempo, int disc[], int low[], bool visitado[],
                             int *pai)
 {

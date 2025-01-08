@@ -8,6 +8,41 @@
 #include <fstream>
 #include <iomanip>
 
+/**
+ * @class Grafo_lista
+ * @brief Classe que representa um grafo utilizando listas de adjacência.
+ * 
+ * A classe Grafo_lista herda da classe base Grafo e implementa um grafo utilizando listas de adjacência.
+ * Ela fornece métodos para carregar, manipular e analisar grafos.
+ * 
+ * @details
+ * A classe contém uma estrutura interna NoLista que representa um nó na lista de adjacência.
+ * Cada nó contém o ID do vértice e um ponteiro para o próximo nó na lista.
+ * 
+ * A classe também contém vários métodos para manipulação e análise do grafo, incluindo:
+ * - Carregar um grafo a partir de um arquivo.
+ * - Criar um novo grafo.
+ * - Limpar o grafo.
+ * - Verificar se o grafo é bipartido.
+ * - Obter o grau do grafo.
+ * - Verificar se o grafo é direcionado.
+ * - Verificar se os vértices ou arestas são ponderados.
+ * - Obter o número de componentes conexas.
+ * - Obter a ordem do grafo.
+ * - Verificar se o grafo é completo.
+ * - Verificar se o grafo é uma árvore.
+ * - Verificar se o grafo possui articulações ou pontes.
+ * - Realizar buscas em profundidade (DFS) para várias finalidades, como marcar componentes, detectar ciclos, etc.
+ * 
+ * @note
+ * A classe utiliza várias variáveis privadas para armazenar informações sobre o grafo, como o primeiro vértice,
+ * número de nós, pesos dos nós, se o grafo é direcionado, se os vértices ou arestas são ponderados, número de arestas,
+ * se os vértices foram visitados, componentes, número de componentes, etc.
+ * 
+ * @see Grafo
+ * @see NoVertice
+ */
+
 class Grafo_lista : public Grafo
 {
 private:
@@ -18,7 +53,7 @@ private:
 
         NoLista(int id) : idVertice(id), proximo(nullptr) {}
     };
-    
+
     NoVertice *primeiroVertice;
     int numNos;
     float *pesoNos;
