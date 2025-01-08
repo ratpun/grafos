@@ -3,15 +3,15 @@
 
 #include "no_Aresta.h"
 
-class NoVertice {
+class NoVertice
+{
 private:
-  int idVertice;      /// Identificador único do vértice
-  double pesoVertice; /// Peso do vértice (caso o grafo seja ponderado nos
-                      /// vértices)
-  NoAresta *primeiraAresta;  /// Ponteiro para a primeira aresta da lista de
-                             /// adjacência
-  NoVertice *proximoVertice; /// Ponteiro para o próximo vértice (lista
-                             /// encadeada de vértices)
+  int idVertice;
+  double pesoVertice;
+
+  NoAresta *primeiraAresta;
+
+  NoVertice *proximoVertice;
 
 public:
   NoVertice(int idVertice, double pesoVertice = 1.0)
@@ -25,7 +25,8 @@ public:
 
   void setProximoVertice(NoVertice *prox) { proximoVertice = prox; }
 
-  void insereAresta(int idDestino, double peso) {
+  void insereAresta(int idDestino, double peso)
+  {
     NoAresta *novaAresta = new NoAresta(idDestino, peso);
     novaAresta->setProxima(primeiraAresta);
     primeiraAresta = novaAresta;

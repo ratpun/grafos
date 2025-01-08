@@ -11,7 +11,7 @@ using namespace std;
 
 /**
  * @brief Construtor da classe Grafo_matriz
- * 
+ *
  * @param n Número de vértices no grafo
  * @param dir Direcionado ou não
  * @param pondArestas Arestas ponderadas ou não
@@ -31,15 +31,13 @@ Grafo_matriz::Grafo_matriz(int n, bool dir, bool pondArestas, bool pondVertices)
     arestas_ponderadas = pondArestas;
     vertices_ponderados = pondVertices;
 
-    // Alocação dos pesos de cada vertices.
     pesoNos = new float[numNos];
 
-    /// Alocação da matriz de adjacência
     matriz = new double *[numNos];
     for (int i = 0; i < numNos; i++)
     {
         matriz[i] = new double[numNos];
-        /// Inicializar a matriz com 0 (sem arestas)
+
         for (int j = 0; j < numNos; j++)
         {
             matriz[i][j] = 0.0;
@@ -49,34 +47,32 @@ Grafo_matriz::Grafo_matriz(int n, bool dir, bool pondArestas, bool pondVertices)
 
 Grafo_matriz::~Grafo_matriz()
 {
-    /// Desalocar a matriz de adjacência
+
     for (int i = 0; i < numNos; i++)
     {
         delete[] matriz[i];
     }
     delete[] matriz;
 
-    //Desaloca os pesos de cada vertice.
-
     delete[] pesoNos;
 }
 
 void Grafo_matriz::insereVertice(int id, double peso)
 {
-    if (id < 0 || id >= numNos) 
+    if (id < 0 || id >= numNos)
     {
         cerr << "ID do vértice inválido." << std::endl;
         return;
     }
-    if (verticesPonderados) 
+    if (verticesPonderados)
     {
         pesoNos[id] = peso;
     }
 }
 
-void Grafo_matriz::adicionaAresta(int origem, int destino, double peso) 
+void Grafo_matriz::adicionaAresta(int origem, int destino, double peso)
 {
-    if (origem < 0 || origem >= numNos || destino < 0 || destino >= numNos) 
+    if (origem < 0 || origem >= numNos || destino < 0 || destino >= numNos)
     {
         std::cerr << "Origem ou destino inválido." << std::endl;
         return;
@@ -84,15 +80,15 @@ void Grafo_matriz::adicionaAresta(int origem, int destino, double peso)
 
     matriz[origem][destino] = peso;
 
-    if (!direcionado) 
+    if (!direcionado)
     {
         matriz[destino][origem] = peso;
     }
 }
 
-bool Grafo_matriz::existeAresta(int origem, int destino) 
+bool Grafo_matriz::existeAresta(int origem, int destino)
 {
-    if (origem < 0 || origem >= numNos || destino < 0 || destino >= numNos) 
+    if (origem < 0 || origem >= numNos || destino < 0 || destino >= numNos)
     {
         return false;
     }
@@ -109,8 +105,6 @@ void Grafo_matriz::carrega_grafo(const string &arquivo)
         return;
     }
 
-    /// 1) Lê a primeira linha (4 valores):
-    ///    [numNos] [dir=0/1] [vPond=0/1] [aPond=0/1]
     int dir, vPond, aPond;
     fin >> numNos >> dir >> vPond >> aPond;
     if (!fin.good())
@@ -119,21 +113,17 @@ void Grafo_matriz::carrega_grafo(const string &arquivo)
         return;
     }
 
-    /// Ajusta flags internas
     direcionado = (dir == 1);
     verticesPonderados = (vPond == 1);
     arestasPonderadas = (aPond == 1);
 
-    /// 2) Aloca a matriz de adjacência
     matriz = new double *[numNos];
     for (int i = 0; i < numNos; i++)
     {
         matriz[i] = new double[numNos];
-        fill_n(matriz[i], matriz[i] + numNos, 0); /// Inicializa com 0 (sem arestas)
+        fill_n(matriz[i], matriz[i] + numNos, 0);
     }
 
-    /// 3) Se os vértices são ponderados, lê uma linha com 'numNos' pesos
-    ///    Caso não sejam ponderados, podemos usar peso 1.0 para todos
     if (verticesPonderados)
     {
         for (int i = 0; i < numNos; i++)
@@ -148,29 +138,26 @@ void Grafo_matriz::carrega_grafo(const string &arquivo)
         }
     }
 
-    /// 4) Agora lemos as arestas até o fim do arquivo:
-    ///    Se arestasPonderadas == 1, formato: <origem> <destino> <peso>
-    ///    Se arestasPonderadas == 0, formato: <origem> <destino>
     numArestas = 0;
     while (true)
     {
         int origem, destino;
-        double peso = 1.0; /// Peso default se não for ponderada
+        double peso = 1.0;
         fin >> origem >> destino;
         if (!fin.good())
         {
-            break; /// chegou no fim ou deu erro de leitura
+            break;
         }
         if (arestasPonderadas)
         {
             fin >> peso;
             if (!fin.good())
             {
-                break; /// leitura de peso falhou
+                break;
             }
         }
-        /// Insere a aresta na matriz de adjacência
-        adicionaAresta(origem - 1, destino - 1, peso); // Ajuste para índice 0
+
+        adicionaAresta(origem - 1, destino - 1, peso);
         numArestas++;
     }
 
@@ -186,44 +173,36 @@ void Grafo_matriz::novo_grafo(const string &descricao, const string &arquivoSaid
         return;
     }
 
-    /// Lê os parâmetros
     int grau, ordem, dir, compConexas, vPond, aPond, completo, bipartido,
         arvore, aPonte, vArti;
     fin >> grau >> ordem >> dir >> compConexas >> vPond >> aPond >> completo >>
         bipartido >> arvore >> aPonte >> vArti;
 
-    /// Configura o grafo
     direcionado = (dir == 1);
     verticesPonderados = (vPond == 1);
     arestasPonderadas = (aPond == 1);
 
     fin.close();
 
-    /// Limpar qualquer dado antigo
     limpaGrafo();
 
-    /// Aloca a matriz de adjacência
     numNos = ordem;
     matriz = new double *[numNos];
     for (int i = 0; i < numNos; i++)
     {
         matriz[i] = new double[numNos];
-        fill(matriz[i], matriz[i] + numNos, 0); /// Inicializa com 0 (sem arestas)
+        fill(matriz[i], matriz[i] + numNos, 0);
     }
 
-    /// Gerar vértices
     srand((unsigned)time(nullptr));
     for (int i = 0; i < ordem; i++)
     {
         double peso = (verticesPonderados) ? (double)(rand() % 10 + 1) : 1.0;
-        /// Aqui não há necessidade de adicionar vértices explicitamente,
-        /// pois a matriz de adjacência já está preparada para armazenar as arestas.
     }
 
-    /// Gerar arestas de acordo com as restrições
     if (completo)
     {
-        /// Grafo completo: Conectar todos os pares de vértices
+
         for (int i = 0; i < ordem; i++)
         {
             for (int j = i + 1; j < ordem; j++)
@@ -240,10 +219,7 @@ void Grafo_matriz::novo_grafo(const string &descricao, const string &arquivoSaid
             }
         }
     }
-    /// Outras opções (como árvore, bipartido, aleatório) podem ser implementadas de forma similar
-    /// A lógica para essas opções será análoga ao que você já implementou, mas usando a matriz de adjacência.
 
-    /// Salvar grafo no arquivo de saída
     ofstream fout(arquivoSaida.c_str());
     if (!fout.is_open())
     {
@@ -255,14 +231,13 @@ void Grafo_matriz::novo_grafo(const string &descricao, const string &arquivoSaid
          << (verticesPonderados ? 1 : 0) << " " << (arestasPonderadas ? 1 : 0)
          << endl;
 
-    /// Salvar a matriz de adjacência
     for (int i = 0; i < ordem; i++)
     {
         for (int j = 0; j < ordem; j++)
         {
             if (matriz[i][j] != 0)
-            {                                  /// Só salvar as arestas existentes
-                fout << i + 1 << " " << j + 1; /// Ajuste para índice 1
+            {
+                fout << i + 1 << " " << j + 1;
                 if (arestasPonderadas)
                 {
                     fout << " " << matriz[i][j];
@@ -277,58 +252,55 @@ void Grafo_matriz::novo_grafo(const string &descricao, const string &arquivoSaid
 
 void Grafo_matriz::limpaGrafo()
 {
-    /// Redefine a matriz de adjacência, setando todos os valores como 0.0
+
     for (int i = 0; i < numNos; i++)
     {
         for (int j = 0; j < numNos; j++)
         {
-            matriz[i][j] = 0.0; /// Desfaz as arestas
+            matriz[i][j] = 0.0;
         }
     }
 
-    /// Redefine o número de arestas
     numArestas = 0;
 }
 
 bool Grafo_matriz::eh_bipartido()
 {
-    int *cores = new int[numNos]; /// Array para armazenar as cores
+    int *cores = new int[numNos];
     for (int i = 0; i < numNos; i++)
     {
-        cores[i] = -1; /// -1 indica que o vértice ainda não foi colorido
+        cores[i] = -1;
     }
 
-    int *fila = new int[numNos]; /// Array para simular a fila
-    int frente = 0;                   /// Índice para a frente da fila
-    int tras = 0;                     /// Índice para o final da fila
+    int *fila = new int[numNos];
+    int frente = 0;
+    int tras = 0;
 
-    /// Tenta colorir o grafo usando BFS
     for (int i = 0; i < numNos; i++)
     {
         if (cores[i] == -1)
-        {                     /// Se o vértice não foi colorido
-            fila[tras++] = i; /// Adiciona o vértice na fila
-            cores[i] = 0;     /// Começa com a cor 0 (pode ser qualquer valor)
+        {
+            fila[tras++] = i;
+            cores[i] = 0;
 
             while (frente < tras)
             {
-                int u = fila[frente++]; /// Remove o vértice da frente da fila
+                int u = fila[frente++];
 
-                /// Verifica os vizinhos de u
                 for (int v = 0; v < numNos; v++)
                 {
                     if (matriz[u][v] != 0)
-                    { /// Se há aresta de u para v
+                    {
                         if (cores[v] == -1)
-                        {                            /// Se v não foi colorido
-                            cores[v] = 1 - cores[u]; /// A cor de v é oposta à de u
-                            fila[tras++] = v;        /// Adiciona v na fila
+                        {
+                            cores[v] = 1 - cores[u];
+                            fila[tras++] = v;
                         }
                         else if (cores[v] == cores[u])
                         {
-                            /// Se v e u têm a mesma cor, não é bipartido
-                            delete[] cores; /// Libera a memória alocada para cores
-                            delete[] fila;  /// Libera a memória alocada para fila
+
+                            delete[] cores;
+                            delete[] fila;
                             return false;
                         }
                     }
@@ -337,33 +309,31 @@ bool Grafo_matriz::eh_bipartido()
         }
     }
 
-    delete[] cores; /// Libera a memória alocada para cores
-    delete[] fila;  /// Libera a memória alocada para fila
-    return true;    /// Se conseguiu colorir todos os vértices sem problemas, é bipartido
+    delete[] cores;
+    delete[] fila;
+    return true;
 }
 
 bool Grafo_matriz::eh_arvore()
 {
-    /// Verifica se o grafo é conexo
+
     int componentesConexos = n_conexo();
     if (componentesConexos > 1)
     {
-        return false; /// Não é árvore se o grafo não for conexo
+        return false;
     }
 
-    /// Verifica se o número de arestas é igual ao número de vértices - 1
     if (numArestas != numNos - 1)
     {
-        return false; /// Não é árvore se as arestas não forem exatamente (vértices - 1)
+        return false;
     }
 
-    /// Se for conexo e não tiver ciclo, é uma árvore
     return true;
 }
 
 int Grafo_matriz::n_conexo()
 {
-    /// Inicializa o vetor de visitados
+
     bool *visitado = new bool[numNos];
     for (int i = 0; i < numNos; ++i)
     {
@@ -372,53 +342,50 @@ int Grafo_matriz::n_conexo()
 
     int numComponentes = 0;
 
-    /// Percorre todos os vértices
     for (int i = 0; i < numNos; ++i)
     {
-        /// Se o vértice não foi visitado, é uma nova componente conexa
+
         if (!visitado[i])
         {
-            ++numComponentes; /// Incrementa o contador de componentes conexos
+            ++numComponentes;
 
-            /// Realiza a DFS para visitar todos os vértices da componente
             dfs(i, visitado);
         }
     }
 
-    delete[] visitado; /// Libera a memória
+    delete[] visitado;
     return numComponentes;
 }
 
 void Grafo_matriz::dfs(int vertice, bool *visitado)
 {
-    /// Marca o vértice atual como visitado
+
     visitado[vertice] = true;
 
-    /// Percorre todos os vértices adjacentes
     for (int i = 0; i < numNos; ++i)
     {
         if (matriz[vertice][i] != 0 && !visitado[i])
         {
-            dfs(i, visitado); /// Chamada recursiva para visitar o vértice adjacente
+            dfs(i, visitado);
         }
     }
 }
 
 bool Grafo_matriz::eh_completo()
 {
-    /// Itera sobre todos os pares de vértices na matriz
+
     for (int i = 0; i < numNos; ++i)
     {
         for (int j = 0; j < numNos; ++j)
         {
-            /// Se i != j e não há uma aresta entre i e j, o grafo não é completo
+
             if (i != j && matriz[i][j] == 0)
             {
                 return false;
             }
         }
     }
-    /// Se passou por todos os pares sem encontrar ausência de aresta, é completo
+
     return true;
 }
 
@@ -428,10 +395,10 @@ bool Grafo_matriz::possui_ponte()
     {
         for (int v = 0; v < numNos; ++v)
         {
-            /// Verifica se há uma aresta entre u e v
+
             if (matriz[u][v] != 0)
             {
-                /// Remove a aresta temporariamente
+
                 double pesoOriginal = matriz[u][v];
                 matriz[u][v] = 0;
                 if (!direcionado)
@@ -439,17 +406,14 @@ bool Grafo_matriz::possui_ponte()
                     matriz[v][u] = 0;
                 }
 
-                /// Verifica se o grafo continua conexo
                 bool *visitado = new bool[numNos];
                 for (int i = 0; i < numNos; ++i)
                 {
                     visitado[i] = false;
                 }
 
-                /// Realiza a DFS a partir de um vértice válido
                 dfs(0, visitado);
 
-                /// Checa se há vértices desconexos
                 bool desconexo = false;
                 for (int i = 0; i < numNos; ++i)
                 {
@@ -462,14 +426,12 @@ bool Grafo_matriz::possui_ponte()
 
                 delete[] visitado;
 
-                /// Restaura a aresta
                 matriz[u][v] = pesoOriginal;
                 if (!direcionado)
                 {
                     matriz[v][u] = pesoOriginal;
                 }
 
-                /// Se a remoção causou desconexão, temos uma ponte
                 if (desconexo)
                 {
                     return true;
