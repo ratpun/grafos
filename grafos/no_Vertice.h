@@ -68,6 +68,4 @@ public:
   void insereAresta(int idDestino, double peso);
 };
 
-#endif;
-
 #endif

@@ -37,10 +37,10 @@ Grafo_matriz::Grafo_matriz(int n, bool dir, bool pondArestas, bool pondVertices)
 
     pesoNos = new float[numNos];
 
-    matriz = new double *[numNos];
+    matriz = new int *[numNos];
     for (int i = 0; i < numNos; i++)
     {
-        matriz[i] = new double[numNos];
+        matriz[i] = new int[numNos];
 
         for (int j = 0; j < numNos; j++)
         {
@@ -79,7 +79,7 @@ Grafo_matriz::~Grafo_matriz()
  * se o grafo for ponderado. Se o identificador do vértice for inválido (menor que 0
  * ou maior ou igual ao número de nós), uma mensagem de erro será exibida.
  */
-void Grafo_matriz::insereVertice(int id, double peso)
+void Grafo_matriz::insereVertice(int id, int peso)
 {
     if (id < 0 || id >= numNos)
     {
@@ -105,7 +105,7 @@ void Grafo_matriz::insereVertice(int id, double peso)
  * @note Se a origem ou o destino forem inválidos (fora dos limites do grafo), 
  *       uma mensagem de erro será exibida e a função retornará sem adicionar a aresta.
  */
-void Grafo_matriz::adicionaAresta(int origem, int destino, double peso)
+void Grafo_matriz::adicionaAresta(int origem, int destino, int peso)
 {
     if (origem < 0 || origem >= numNos || destino < 0 || destino >= numNos)
     {
@@ -176,18 +176,18 @@ void Grafo_matriz::carrega_grafo(const string &arquivo)
     verticesPonderados = (vPond == 1);
     arestasPonderadas = (aPond == 1);
 
-    matriz = new double *[numNos];
+    matriz = new int *[numNos];
     for (int i = 0; i < numNos; i++)
     {
-        matriz[i] = new double[numNos];
-        fill_n(matriz[i], matriz[i] + numNos, 0);
+        matriz[i] = new int[numNos];
+        fill_n(matriz[i], numNos, 0);
     }
 
     if (verticesPonderados)
     {
         for (int i = 0; i < numNos; i++)
         {
-            double pesoVert;
+            int pesoVert;
             fin >> pesoVert;
             if (!fin.good())
             {
@@ -201,7 +201,7 @@ void Grafo_matriz::carrega_grafo(const string &arquivo)
     while (true)
     {
         int origem, destino;
-        double peso = 1.0;
+        int peso = 1.0;
         fin >> origem >> destino;
         if (!fin.good())
         {
@@ -273,10 +273,10 @@ void Grafo_matriz::novo_grafo(const string &descricao, const string &arquivoSaid
     limpaGrafo();
 
     numNos = ordem;
-    matriz = new double *[numNos];
+    matriz = new int *[numNos];
     for (int i = 0; i < numNos; i++)
     {
-        matriz[i] = new double[numNos];
+        matriz[i] = new int[numNos];
         fill(matriz[i], matriz[i] + numNos, 0);
     }
 
@@ -546,7 +546,7 @@ bool Grafo_matriz::possui_ponte()
             if (matriz[u][v] != 0)
             {
 
-                double pesoOriginal = matriz[u][v];
+                int pesoOriginal = matriz[u][v];
                 matriz[u][v] = 0;
                 if (!direcionado)
                 {

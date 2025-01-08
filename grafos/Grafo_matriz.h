@@ -37,7 +37,7 @@ private:
     bool direcionado;
     bool verticesPonderados;
     bool arestasPonderadas;
-    double **matriz;
+    int **matriz;
     int numArestas;
     bool *visitado;
     int *componentes;
@@ -46,8 +46,8 @@ private:
 public:
     Grafo_matriz(int n, bool dir, bool pondArestas, bool pondVertices);
     ~Grafo_matriz();
-    void insereVertice(int id, double peso);
-    void adicionaAresta(int origem, int destino, double peso);
+    void insereVertice(int id, int peso);
+    void adicionaAresta(int origem, int destino, int peso);
     bool existeAresta(int origem, int destino);
     void carrega_grafo(const std::string &arquivo);
     void novo_grafo(const std::string &descricao, const std::string &arquivoSaida);
