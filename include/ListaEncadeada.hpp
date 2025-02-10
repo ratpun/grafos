@@ -18,6 +18,7 @@ public:
   void inserir(const T &dado);
   // Retorna o ponteiro para o primeiro nó (para iteração)
   No<T> *getHead() const;
+  void setHead(No<T> *novoHead) { head = novoHead; }
 };
 
 #include "ListaEncadeada.tpp"

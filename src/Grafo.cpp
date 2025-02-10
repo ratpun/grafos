@@ -3,16 +3,16 @@
 #include <fstream>
 #include <iostream>
 using namespace std;
-
+const double INF = 1e9;
 // Carrega o grafo a partir do arquivo
 // O arquivo tem o formato:
 //    ordem direcionado ponderadoVertices ponderadoArestas
 //    [pesos dos vértices se ponderados]
 //    origem destino [peso]   (para cada aresta)
-void Grafo::carrega_grafo(const std::string &nomeArquivo) {
-  std::ifstream arquivo(nomeArquivo.c_str());
+void Grafo::carrega_grafo(const string &nomeArquivo) {
+  ifstream arquivo(nomeArquivo.c_str());
   if (!arquivo) {
-    std::cerr << "Erro ao abrir o arquivo " << nomeArquivo << "\n";
+    cerr << "Erro ao abrir o arquivo " << nomeArquivo << "\n";
     return;
   }
   arquivo >> ordem >> direcionado >> ponderadoVertices >> ponderadoArestas;
@@ -41,6 +41,7 @@ void Grafo::carrega_grafo(const std::string &nomeArquivo) {
       inserir_aresta(origem, destino, 1);
     }
   }
+
   arquivo.close();
 }
 
@@ -138,4 +139,69 @@ bool Grafo::eh_completo() const {
     }
   }
   return true;
+}
+
+Grafo::ResultadoDistancia Grafo::calculaMaiorMenorDistancia() const {
+  int n = get_ordem(); // número de nós conforme lido no arquivo (e
+                       // possivelmente atualizado após remoções)
+  if (n <= 0) {
+    ResultadoDistancia res = {-1, -1, -1};
+    return res;
+  }
+
+  // Aloca uma matriz de distâncias (usando índices 0-based internamente)
+  double **dist = new double *[n];
+  for (int i = 0; i < n; i++) {
+    dist[i] = new double[n];
+  }
+
+  // Inicializa a matriz de distâncias
+  // Usamos os métodos virtuais: assumimos que os nós são identificados de 1 a n
+  for (int i = 1; i <= n; i++) {
+    for (int j = 1; j <= n; j++) {
+      if (i == j) {
+        dist[i - 1][j - 1] = 0;
+      } else {
+        double peso =
+            getPesoAresta(i, j); // deve retornar INF se não houver aresta
+        dist[i - 1][j - 1] = peso;
+      }
+    }
+  }
+
+  // Aplica o algoritmo de Floyd–Warshall
+  for (int k = 0; k < n; k++) {
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n; j++) {
+        if (dist[i][k] + dist[k][j] < dist[i][j])
+          dist[i][j] = dist[i][k] + dist[k][j];
+      }
+    }
+  }
+
+  // Procura o par de nós com o maior dos menores caminhos (ignorando os casos
+  // sem conexão)
+  double maxDist = -1e9; // Valor inicial muito baixo
+  int bestI = -1, bestJ = -1;
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      if (i != j && dist[i][j] < INF && dist[i][j] > maxDist) {
+        maxDist = dist[i][j];
+        bestI = i;
+        bestJ = j;
+      }
+    }
+  }
+
+  // Libera a memória alocada para a matriz de distâncias
+  for (int i = 0; i < n; i++) {
+    delete[] dist[i];
+  }
+  delete[] dist;
+
+  ResultadoDistancia res;
+  res.no1 = (bestI != -1 ? bestI + 1 : -1);
+  res.no2 = (bestJ != -1 ? bestJ + 1 : -1);
+  res.distancia = maxDist;
+  return res;
 }

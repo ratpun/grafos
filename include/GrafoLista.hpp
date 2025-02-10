@@ -29,11 +29,18 @@ private:
 public:
   GrafoLista();
   virtual ~GrafoLista();
-  virtual void inserir_vertice(int id, int peso = 0);
-  virtual void inserir_aresta(int origem, int destino, int peso = 0);
-  virtual IntList get_vizinhos(int vertice) const;
+  virtual void inserir_vertice(int id, int peso = 0) override;
+  virtual void inserir_aresta(int origem, int destino, int peso = 0) override;
+  virtual IntList get_vizinhos(int vertice) const override;
   // Função auxiliar para buscar um vértice pelo id
   Vertice *encontrar_vertice(int id) const;
+
+  void novo_no(int peso = 0);
+  void nova_aresta(int origem, int destino, int peso);
+  void deleta_no(int id) override;
+  void deleta_aresta(int origem, int destino) override;
+
+  virtual double getPesoAresta(int origem, int destino) const override;
 };
 
 #endif

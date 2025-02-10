@@ -38,6 +38,23 @@ public:
   // Métodos virtuais para inserir vértices e arestas
   virtual void inserir_vertice(int id, int peso = 0) = 0;
   virtual void inserir_aresta(int origem, int destino, int peso = 0) = 0;
+
+  // Estrutura para armazenar o resultado da função de distância
+  struct ResultadoDistancia {
+    int no1;
+    int no2;
+    double distancia;
+  };
+
+  // Nova função virtual para obter o peso de uma aresta entre dois nós.
+  // Essa função será usada no cálculo das menores distâncias.
+  virtual double getPesoAresta(int origem, int destino) const = 0;
+
+  // Função para calcular, entre todos os pares de nós, qual é o par que possui
+  // a maior menor distância
+  virtual ResultadoDistancia calculaMaiorMenorDistancia() const;
+  virtual void deleta_no(int id) = 0;
+  virtual void deleta_aresta(int origem, int destino) = 0;
 };
 
 #endif
