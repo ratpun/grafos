@@ -29,6 +29,6 @@ int IntList::size() const { return count; }
 
 int IntList::get(int index) const {
   if (index < 0 || index >= count)
-    return -1; // ou tratar erro
+    return -1;
   return data[index];
 }

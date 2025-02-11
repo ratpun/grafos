@@ -220,3 +220,30 @@ double GrafoMatriz::getPesoAresta(int origem, int destino) const {
     return INF;
   return (double)matriz[o][d];
 }
+
+void GrafoMatriz::imprime_grafo() const {
+  std::cout << "Grafo (Matriz de Adjacência):" << std::endl;
+  std::cout << "Ordem: " << ordem << std::endl;
+  // Itera pelos nós (usando nNos como o número atual de nós inseridos)
+  for (int i = 0; i < nNos; i++) {
+    std::cout << "Vértice " << (i + 1);
+    // Se o grafo for ponderado, mostre o peso do vértice
+    if (ponderadoVertices)
+      std::cout << " (peso: " << pesosVertices[i] << ")";
+    std::cout << " -> ";
+    // Lista os vizinhos e o peso da aresta (se ponderada)
+    bool temVizinhos = false;
+    for (int j = 0; j < nNos; j++) {
+      if (matriz[i][j] != 0) {
+        std::cout << (j + 1);
+        if (ponderadoArestas)
+          std::cout << " (peso: " << matriz[i][j] << ")";
+        std::cout << " ";
+        temVizinhos = true;
+      }
+    }
+    if (!temVizinhos)
+      std::cout << "Sem vizinhos";
+    std::cout << std::endl;
+  }
+}

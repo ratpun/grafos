@@ -19,7 +19,7 @@ GrafoLista::~GrafoLista() {
 
 void GrafoLista::inserir_vertice(int id, int peso) {
   Vertice *v = new Vertice(id, peso);
-  vertices->inserir(v);
+  vertices->append(v);
 }
 
 Vertice *GrafoLista::encontrar_vertice(int id) const {
@@ -271,4 +271,28 @@ double GrafoLista::getPesoAresta(int origem, int destino) const {
     no = no->prox;
   }
   return 1e9;
+}
+void GrafoLista::imprime_grafo() const {
+  std::cout << "Grafo (Lista de Adjacência):" << std::endl;
+  std::cout << "Ordem: " << ordem << std::endl;
+  // Percorre a lista de vértices (assumindo que vertices->getHead() retorna um
+  // ponteiro para o primeiro nó)
+  No<Vertice *> *atual = vertices->getHead();
+  while (atual != nullptr) {
+    std::cout << "Vértice " << atual->dado->id;
+    if (ponderadoVertices)
+      std::cout << " (peso: " << atual->dado->peso << ")";
+    std::cout << " -> ";
+    // Obtém e imprime os vizinhos usando get_vizinhos
+    IntList vizinhos = get_vizinhos(atual->dado->id);
+    if (vizinhos.size() == 0) {
+      std::cout << "Sem vizinhos";
+    } else {
+      for (int i = 0; i < vizinhos.size(); i++) {
+        std::cout << vizinhos.get(i) << " ";
+      }
+    }
+    std::cout << std::endl;
+    atual = atual->prox;
+  }
 }

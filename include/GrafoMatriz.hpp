@@ -26,6 +26,7 @@ public:
   void nova_aresta(int origem, int destino, int peso);
   void deleta_no(int id) override;
   void deleta_aresta(int origem, int destino) override;
+  virtual void imprime_grafo() const override;
 };
 
 #endif

@@ -4,11 +4,7 @@
 #include <iostream>
 using namespace std;
 const double INF = 1e9;
-// Carrega o grafo a partir do arquivo
-// O arquivo tem o formato:
-//    ordem direcionado ponderadoVertices ponderadoArestas
-//    [pesos dos vértices se ponderados]
-//    origem destino [peso]   (para cada aresta)
+
 void Grafo::carrega_grafo(const string &nomeArquivo) {
   ifstream arquivo(nomeArquivo.c_str());
   if (!arquivo) {
@@ -142,8 +138,8 @@ bool Grafo::eh_completo() const {
 }
 
 Grafo::ResultadoDistancia Grafo::calculaMaiorMenorDistancia() const {
-  int n = get_ordem(); // número de nós conforme lido no arquivo (e
-                       // possivelmente atualizado após remoções)
+  int n = get_ordem();
+
   if (n <= 0) {
     ResultadoDistancia res = {-1, -1, -1};
     return res;
@@ -156,7 +152,7 @@ Grafo::ResultadoDistancia Grafo::calculaMaiorMenorDistancia() const {
   }
 
   // Inicializa a matriz de distâncias
-  // Usamos os métodos virtuais: assumimos que os nós são identificados de 1 a n
+  // Usando os métodos virtuais
   for (int i = 1; i <= n; i++) {
     for (int j = 1; j <= n; j++) {
       if (i == j) {
@@ -181,7 +177,7 @@ Grafo::ResultadoDistancia Grafo::calculaMaiorMenorDistancia() const {
 
   // Procura o par de nós com o maior dos menores caminhos (ignorando os casos
   // sem conexão)
-  double maxDist = -1e9; // Valor inicial muito baixo
+  double maxDist = -1e9;
   int bestI = -1, bestJ = -1;
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < n; j++) {

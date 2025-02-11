@@ -8,160 +8,124 @@
 
 ## Sobre o Projeto
 
-# Trabalho de Grafos em C++
+# Trabalho 2 – Grafos 
 
 ## Descrição
 
-Este projeto implementa um grafo em C++ seguindo os seguintes requisitos:
+Este projeto expande o Trabalho 1, incorporando funcionalidades dinâmicas para a manipulação de grafos em C++. Além de carregar um grafo a partir de um arquivo, o programa agora permite:
 
-- **Classe Abstrata `Grafo`:**  
-  Implementa funções genéricas para:
-  - Carregar o grafo a partir de um arquivo (`carrega_grafo`)
-  - Retornar a ordem do grafo (`get_ordem`)
-  - Calcular o grau (ou grau máximo) do grafo (`get_grau`)
-  - Determinar o número de componentes conexas (`n_conexo`)
-  - Informar se o grafo é direcionado (`eh_direcionado`)
-  - Informar se os vértices são ponderados (`vertice_ponderado`)
-  - Informar se as arestas são ponderadas (`aresta_ponderada`)
-  - Verificar se o grafo é completo (`eh_completo`)
+- Inserir novos nós e arestas dinamicamente.
+- Remover nós e arestas, com reindexação dos nós remanescentes para manter o grafo isomorfo ao original.
+- Calcular a maior menor distância (o maior dos menores caminhos entre dois nós), utilizando o algoritmo de Floyd–Warshall.
 
-- **Classes Derivadas:**  
-  São implementadas duas classes filhas, cada uma utilizando uma estrutura diferente para o armazenamento dos dados:
-  - **GrafoMatriz:** Utiliza uma matriz de adjacência para armazenar as arestas.  
-  - **GrafoLista:** Utiliza listas encadeadas (alocação dinâmica) para representar tanto os vértices quanto as arestas.
+O projeto possui duas implementações distintas de armazenamento:
 
-- **Validações Implementadas:**  
-  O grafo não aceita:
-  - **Laços:** Arestas cuja origem é igual ao destino.
-  - **Arestas Múltiplas:** Mais de uma aresta entre os mesmos vértices.
+1. **GrafoMatriz:**  
+   Utiliza uma matriz de adjacência dinâmica, com capacidade inicial de 10 nós, que é realocada (dobrando a capacidade) quando necessário. Ao remover um nó, a matriz é reconstruída para conter somente os nós remanescentes, com os IDs recalculados de forma sequencial.
+
+2. **GrafoLista:**  
+   Utiliza listas encadeadas para armazenar os vértices e suas arestas. A inserção dos nós é feita de modo a preservar a ordem de leitura, e a remoção envolve atualizar os IDs dos nós remanescentes e as referências das arestas.
 
 ## Estrutura do Projeto
 
-A estrutura de diretórios é a seguinte:
-
 ```
 | include/
-| | IntList.hpp
-| | ListaEncadeada.hpp
-| | ListaEncadeada.tpp
-| | Grafo.hpp
-| | GrafoMatriz.hpp
-| | GrafoLista.hpp
+|    Grafo.hpp
+|    GrafoMatriz.hpp
+|    GrafoLista.hpp
+|    IntList.hpp
+|    ListaEncadeada.hpp
+|    ListaEncadeada.tpp
 |
 | src/
-| | IntList.cpp
-| | Grafo.cpp
-| | GrafoMatriz.cpp
-| | GrafoLista.cpp
+|    Grafo.cpp
+|    GrafoMatriz.cpp
+|    GrafoLista.cpp
+|    IntList.cpp
 |
 | entradas/
-| | grafo.txt
+|    grafo.txt
 |
 | main.cpp
 ```
 
-## Bibliotecas Utilizadas
+## Como Compilar
 
-Foram utilizadas apenas as seguintes bibliotecas permitidas:
-
-- **fstream**
-- **iostream**
-- **iomanip**
-- **cmath**
-- **cstdlib**
-- **cstdarg**
-- **ctime**
-- **string**
-
-## Compilação
-
-Utilize o compilador **g++** (ou similar) para compilar todos os arquivos. Exemplo de comando:
+Utilize um compilador C++ (por exemplo, clang++) com as opções:
 
 ```bash
-g++ -o main.out main.cpp src/*.cpp
+clang++ -std=c++17 -Wall -Wextra -g -Iinclude -o main.out main.cpp src/*.cpp
 ```
 
-## Execução
+## Como Executar
 
-O programa é executado via linha de comando. Os parâmetros indicam:
+O programa é executado via linha de comando. Exemplos:
 
-- **Estrutura de armazenamento:**  
-  - `-m` para utilizar matriz de adjacência  
-  - `-l` para utilizar lista encadeada
-- **Arquivo de entrada:** Caminho para o arquivo com a definição do grafo
-
-Exemplos:
-
-- Para grafo direcionado com matriz:
+- Para a versão Matriz:
   ```bash
   ./main.out -d -m entradas/grafo.txt
   ```
-- Para grafo direcionado com lista:
+- Para a versão Lista:
   ```bash
   ./main.out -d -l entradas/grafo.txt
   ```
 
-Após a execução, serão exibidas informações como:
-- Grau do grafo
-- Ordem do grafo
-- Se o grafo é direcionado
-- Se os vértices são ponderados
-- Se as arestas são ponderadas
-- Se o grafo é completo
+Os parâmetros são:
+- **-d** ou **-n**: Indicam se o grafo é direcionado (-d para direcionado, -n para não direcionado).
+- **-m** ou **-l**: Selecionam a estrutura de armazenamento (matriz ou lista).
+- **nome_arquivo.txt**: Caminho para o arquivo de entrada que descreve o grafo.
 
-## Exemplo de Arquivo de Entrada (grafo.txt)
+## Formato do Arquivo de Entrada
 
-O arquivo `grafo.txt` deve estar no seguinte formato:
-
-```
-3 1 1 1
-2 3 7
-1 2 6
-2 1 4
-2 3 -5
-```
-
-Onde:
+O arquivo deve ter o seguinte formato:
 
 - **Primeira linha:**  
-  - `3` → Número de vértices (ordem do grafo)
-  - `1` → Grafo direcionado (1 = sim, 0 = não)
-  - `1` → Vértices ponderados (1 = sim, 0 = não)
-  - `1` → Arestas ponderadas (1 = sim, 0 = não)
+  `<ordem> <direcionado> <ponderadoVertices> <ponderadoArestas>`
+  
+  Por exemplo, para um grafo com 5 nós não direcionado, sem ponderação:
+  ```
+  5 0 0 0
+  ```
 
-- **Segunda linha:**  
-  Lista de pesos dos vértices (neste exemplo, vértice 1 com peso 2, vértice 2 com peso 3 e vértice 3 com peso 7)
+- **Segunda linha (opcional):**  
+  Lista de pesos dos vértices, se os vértices forem ponderados.
 
 - **Linhas seguintes:**  
-  Cada linha representa uma aresta, definida por:  
-  `origem destino [peso]`  
-  *(O peso é informado apenas se as arestas forem ponderadas.)*
+  Cada linha representa uma aresta. Se as arestas forem ponderadas, cada linha deve conter:  
+  `<origem> <destino> <peso>`
 
-### Exemplo de Arquivo com Laço e Aresta Múltipla
+  Caso contrário, os valores de peso são ignorados (e um peso padrão, geralmente 1, é usado).
 
-Considere o arquivo a seguir, que contém um laço e uma aresta múltipla (estas entradas serão rejeitadas):
-
+Exemplo de arquivo de entrada:
 ```
-4 0 0 0
+5 0 0 0
 1 2
-2 3
-3 3   // Laço: aresta de 3 para 3 (não permitido)
-2 3   // Aresta múltipla: já existe aresta de 2 para 3 (não permitido)
-4 1
+2 5
+5 4
+4 3
+3 1
+1 4
+3 2
+1 5
 ```
 
-- A aresta `3 3` não será aceita pois é um laço (origem e destino iguais).
-- A segunda ocorrência de `2 3` não será aceita pois já existe uma aresta entre 2 e 3.
+## Funcionalidades Dinâmicas
+
+Após o carregamento do grafo, o programa executa as seguintes operações:
+
+1. **Exclusão do Nó:**  
+   A função `deleta_no` remove o nó com o id especificado, elimina todas as arestas incidentes e reindexa os nós remanescentes (os IDs dos nós remanescentes serão renumerados de forma sequencial).
+
+2. **Exclusão da Aresta:**  
+   A função `deleta_aresta` remove a primeira aresta do nó de id 2, conforme definido pelo método `get_vizinhos`.
+
+3. **Cálculo da Maior Menor Distância:**  
+   A função `calculaMaiorMenorDistancia` (implementada de forma genérica na classe base) utiliza os métodos virtuais `getPesoAresta` e (se necessário) `get_vizinhos` para computar, via Floyd–Warshall, os menores caminhos entre todos os pares de nós e determinar o par com a maior distância mínima.
 
 ## Considerações Finais
 
-- **Formatação do Arquivo:**  
-  Certifique-se de que o arquivo de entrada esteja corretamente formatado e localizado no diretório `entradas/` ou ajuste o caminho conforme necessário.
-
-- **Verificações Internas:**  
-  As validações para impedir a inserção de laços e arestas múltiplas estão implementadas nos métodos de inserção de arestas (tanto para a classe `GrafoMatriz` quanto para `GrafoLista`).
-
-- **Gerenciamento de Memória:**  
-  O código foi escrito com cuidado para evitar vazamentos de memória. Recomenda-se a verificação com ferramentas como o Valgrind, se necessário.
+- As operações de inserção, remoção e reindexação devem ser implementadas de forma consistente nas versões matriz e lista para que os resultados sejam idênticos.
+- O cálculo da maior menor distância depende de uma correta reconstrução da estrutura do grafo após remoções.
+- Se ocorrerem discrepâncias nos resultados, verifique a reindexação dos nós e a atualização das arestas.
 
 ---

@@ -32,8 +32,6 @@ public:
   // Informa se o grafo é completo
   bool eh_completo() const;
 
-  // Método virtual que retorna os vizinhos de um vértice (os vértices
-  // adjacentes)
   virtual IntList get_vizinhos(int vertice) const = 0;
   // Métodos virtuais para inserir vértices e arestas
   virtual void inserir_vertice(int id, int peso = 0) = 0;
@@ -47,7 +45,6 @@ public:
   };
 
   // Nova função virtual para obter o peso de uma aresta entre dois nós.
-  // Essa função será usada no cálculo das menores distâncias.
   virtual double getPesoAresta(int origem, int destino) const = 0;
 
   // Função para calcular, entre todos os pares de nós, qual é o par que possui
@@ -55,6 +52,8 @@ public:
   virtual ResultadoDistancia calculaMaiorMenorDistancia() const;
   virtual void deleta_no(int id) = 0;
   virtual void deleta_aresta(int origem, int destino) = 0;
+
+  virtual void imprime_grafo() const = 0;
 };
 
 #endif

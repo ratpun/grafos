@@ -30,6 +30,8 @@ int main(int argc, char *argv[]) {
 
   cout << "Grafo carregado: Ordem = " << grafo->get_ordem() << endl;
 
+  grafo->imprime_grafo();
+
   // Exclusão de nó 1 (se existir)
   cout << "Excluindo nó 1..." << endl;
 
@@ -42,6 +44,8 @@ int main(int argc, char *argv[]) {
     int primeiroVizinho = vizinhos.get(0);
     grafo->deleta_aresta(2, primeiroVizinho);
   }
+
+  grafo->imprime_grafo();
 
   // Impressão das propriedades do grafo
   cout << "Grau: " << grafo->get_grau() << endl;

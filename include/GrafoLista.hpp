@@ -41,6 +41,8 @@ public:
   void deleta_aresta(int origem, int destino) override;
 
   virtual double getPesoAresta(int origem, int destino) const override;
+
+  virtual void imprime_grafo() const override;
 };
 
 #endif

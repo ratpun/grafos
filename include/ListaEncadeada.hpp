@@ -16,6 +16,8 @@ public:
   ListaEncadeada();
   ~ListaEncadeada();
   void inserir(const T &dado);
+  void append(const T &dado); // Insere no final
+
   // Retorna o ponteiro para o primeiro nó (para iteração)
   No<T> *getHead() const;
   void setHead(No<T> *novoHead) { head = novoHead; }
