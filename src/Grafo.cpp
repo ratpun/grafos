@@ -5,10 +5,6 @@
 using namespace std;
 
 // Carrega o grafo a partir do arquivo
-// O arquivo tem o formato:
-//    ordem direcionado ponderadoVertices ponderadoArestas
-//    [pesos dos vértices se ponderados]
-//    origem destino [peso]   (para cada aresta)
 void Grafo::carrega_grafo(const std::string &nomeArquivo) {
   std::ifstream arquivo(nomeArquivo.c_str());
   if (!arquivo) {
