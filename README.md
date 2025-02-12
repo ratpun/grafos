@@ -8,7 +8,7 @@
 
 ## Sobre o Projeto
 
-# Trabalho de Grafos em C++
+# Trabalho 01 de Grafos em C++
 
 ## Descrição
 
@@ -75,10 +75,10 @@ Foram utilizadas apenas as seguintes bibliotecas permitidas:
 
 ## Compilação
 
-Utilize o compilador **g++** (ou similar) para compilar todos os arquivos. Exemplo de comando:
+Utilize o compilador **clang++ -o** (ou similar) para compilar todos os arquivos. Exemplo de comando:
 
 ```bash
-g++ -o main.out main.cpp src/*.cpp
+clang++ -o -o main.out main.cpp src/*.cpp
 ```
 
 ## Execução
