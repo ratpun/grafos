@@ -8,12 +8,11 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
   if (argc < 4) {
-    cout << "Uso: " << argv[0] << " -d|-n -m|-l nome_arquivo.txt\n";
+    cout << "Uso: " << argv[0] << " -d -m|-l nome_arquivo.txt\n";
     return 1;
   }
 
-  string flagDirecao =
-      argv[1]; // Exemplo: "-d" (direcionado) ou "-n" (não direcionado)
+  string flagDirecao = argv[1];
   string flagEstrutura = argv[2]; // "-m" para matriz ou "-l" para lista
   string nomeArquivo = argv[3];
 
