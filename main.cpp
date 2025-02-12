@@ -8,11 +8,11 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
   if (argc < 4) {
-    cout << "Uso: " << argv[0] << " -d|-n -m|-l grafo.txt" << endl;
+    cout << "Uso: " << argv[0] << " -d -m|-l grafo.txt" << endl;
     return 1;
   }
 
-  string flagDirecao = argv[1];   // -d ou -n
+  string flagDirecao = argv[1];
   string flagEstrutura = argv[2]; // -m ou -l
   string nomeArquivo = argv[3];
 
@@ -28,9 +28,9 @@ int main(int argc, char *argv[]) {
 
   grafo->carrega_grafo(nomeArquivo);
 
-  cout << "Grafo carregado: Ordem = " << grafo->get_ordem() << endl;
+  // cout << "Grafo carregado: Ordem = " << grafo->get_ordem() << endl;
 
-  grafo->imprime_grafo();
+  // grafo->imprime_grafo();
 
   // Exclusão de nó 1 (se existir)
   cout << "Excluindo nó 1..." << endl;
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
     grafo->deleta_aresta(2, primeiroVizinho);
   }
 
-  grafo->imprime_grafo();
+  // grafo->imprime_grafo();
 
   // Impressão das propriedades do grafo
   cout << "Grau: " << grafo->get_grau() << endl;
