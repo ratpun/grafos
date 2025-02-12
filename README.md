@@ -54,7 +54,7 @@ O projeto possui duas implementações distintas de armazenamento:
 Utilize um compilador C++ (por exemplo, clang++) com as opções:
 
 ```bash
-clang++ -std=c++17 -Wall -Wextra -g -Iinclude -o main.out main.cpp src/*.cpp
+clang++ -o main.out main.cpp src/*.cpp
 ```
 
 ## Como Executar
