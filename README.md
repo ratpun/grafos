@@ -8,59 +8,124 @@
 
 ## Sobre o Projeto
 
-Este projeto implementa operações básicas com grafos, permitindo:  
-- **Leitura e análise de grafos**: com representações por matriz de adjacência ou lista de adjacência.  
-- **Criação de grafos aleatórios**: com base em propriedades definidas em um arquivo de descrição.  
+# Trabalho 2 – Grafos 
 
----
+## Descrição
 
+Este projeto expande o Trabalho 1, incorporando funcionalidades dinâmicas para a manipulação de grafos em C++. Além de carregar um grafo a partir de um arquivo, o programa agora permite:
 
-# Projeto de Grafos - Casos de Uso
+- Inserir novos nós e arestas dinamicamente.
+- Remover nós e arestas, com reindexação dos nós remanescentes para manter o grafo isomorfo ao original.
+- Calcular a maior menor distância (o maior dos menores caminhos entre dois nós), utilizando o algoritmo de Floyd–Warshall.
 
-## Casos de Uso do Programa
+O projeto possui duas implementações distintas de armazenamento:
 
-### **Caso 1: Descrição do Grafo com Matriz de Adjacência**
-```bash
-main.out -d -m grafo.txt
+1. **GrafoMatriz:**  
+   Utiliza uma matriz de adjacência dinâmica, com capacidade inicial de 10 nós, que é realocada (dobrando a capacidade) quando necessário. Ao remover um nó, a matriz é reconstruída para conter somente os nós remanescentes, com os IDs recalculados de forma sequencial.
+
+2. **GrafoLista:**  
+   Utiliza listas encadeadas para armazenar os vértices e suas arestas. A inserção dos nós é feita de modo a preservar a ordem de leitura, e a remoção envolve atualizar os IDs dos nós remanescentes e as referências das arestas.
+
+## Estrutura do Projeto
+
 ```
-- Carrega o grafo do arquivo `grafo.txt` e imprime sua descrição utilizando a **matriz de adjacência**.  
-- Exemplo de saída:
+| include/
+|    Grafo.hpp
+|    GrafoMatriz.hpp
+|    GrafoLista.hpp
+|    IntList.hpp
+|    ListaEncadeada.hpp
+|    ListaEncadeada.tpp
+|
+| src/
+|    Grafo.cpp
+|    GrafoMatriz.cpp
+|    GrafoLista.cpp
+|    IntList.cpp
+|
+| entradas/
+|    grafo.txt
+|
+| main.cpp
+```
+
+## Como Compilar
+
+Utilize um compilador C++ (por exemplo, clang++) com as opções:
+
+```bash
+clang++ -o main.out main.cpp src/*.cpp
+```
+
+## Como Executar
+
+O programa é executado via linha de comando. Exemplos:
+
+- Para a versão Matriz:
+  ```bash
+  ./main.out -d -m entradas/grafo.txt
   ```
-  Grau: 3
-  Ordem: 3
-  Direcionado: Sim
-  Componentes conexas: 1
-  Vertices ponderados: Sim
-  Arestas ponderadas: Sim
-  Completo: Sim
-  Bipartido: Não
-  Arvore: Não
-  Aresta Ponte: Não
-  Vertice de Articulação: Não
+- Para a versão Lista:
+  ```bash
+  ./main.out -d -l entradas/grafo.txt
   ```
 
----
+Os parâmetros são:
+- **-d** ou **-n**: Indicam se o grafo é direcionado (-d para direcionado, -n para não direcionado).
+- **-m** ou **-l**: Selecionam a estrutura de armazenamento (matriz ou lista).
+- **nome_arquivo.txt**: Caminho para o arquivo de entrada que descreve o grafo.
 
-### **Caso 2: Descrição do Grafo com Lista de Adjacência**
-```bash
-main.out -d -l grafo.txt
+## Formato do Arquivo de Entrada
+
+O arquivo deve ter o seguinte formato:
+
+- **Primeira linha:**  
+  `<ordem> <direcionado> <ponderadoVertices> <ponderadoArestas>`
+  
+  Por exemplo, para um grafo com 5 nós não direcionado, sem ponderação:
+  ```
+  5 0 0 0
+  ```
+
+- **Segunda linha (opcional):**  
+  Lista de pesos dos vértices, se os vértices forem ponderados.
+
+- **Linhas seguintes:**  
+  Cada linha representa uma aresta. Se as arestas forem ponderadas, cada linha deve conter:  
+  `<origem> <destino> <peso>`
+
+  Caso contrário, os valores de peso são ignorados (e um peso padrão, geralmente 1, é usado).
+
+Exemplo de arquivo de entrada:
 ```
-- Igual ao **Caso 1**, mas utilizando a **lista de adjacência** para carregar o grafo.
+5 0 0 0
+1 2
+2 5
+5 4
+4 3
+3 1
+1 4
+3 2
+1 5
+```
+
+## Funcionalidades Dinâmicas
+
+Após o carregamento do grafo, o programa executa as seguintes operações:
+
+1. **Exclusão do Nó:**  
+   A função `deleta_no` remove o nó com o id especificado, elimina todas as arestas incidentes e reindexa os nós remanescentes (os IDs dos nós remanescentes serão renumerados de forma sequencial).
+
+2. **Exclusão da Aresta:**  
+   A função `deleta_aresta` remove a primeira aresta do nó de id 2, conforme definido pelo método `get_vizinhos`.
+
+3. **Cálculo da Maior Menor Distância:**  
+   A função `calculaMaiorMenorDistancia` (implementada de forma genérica na classe base) utiliza os métodos virtuais `getPesoAresta` e (se necessário) `get_vizinhos` para computar, via Floyd–Warshall, os menores caminhos entre todos os pares de nós e determinar o par com a maior distância mínima.
+
+## Considerações Finais
+
+- As operações de inserção, remoção e reindexação devem ser implementadas de forma consistente nas versões matriz e lista para que os resultados sejam idênticos.
+- O cálculo da maior menor distância depende de uma correta reconstrução da estrutura do grafo após remoções.
+- Se ocorrerem discrepâncias nos resultados, verifique a reindexação dos nós e a atualização das arestas.
 
 ---
-
-### **Caso 3: Criação de Grafo Aleatório com Matriz de Adjacência**
-```bash
-main.out -c -m descricao.txt grafo.txt
-```
-- Lê as propriedades de um arquivo de descrição (`descricao.txt`), cria um grafo aleatório com base nessas propriedades utilizando a **matriz de adjacência** e salva o grafo gerado em `grafo.txt`.
-
----
-
-### **Caso 4: Criação de Grafo Aleatório com Lista de Adjacência**
-```bash
-main.out -c -l descricao.txt grafo.txt
-```
-- Igual ao **Caso 3**, mas utilizando a **lista de adjacência** para criar e salvar o grafo.
-
-
