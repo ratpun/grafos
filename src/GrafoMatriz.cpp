@@ -291,6 +291,7 @@ void GrafoMatriz::imprime_grafo() const
   }
 }
 
+// Algoritmo Guloso para coloração de arestas
 // Complexidade O(N^2),pois percorre toda a matriz, mesmo onde não há arestas (N é o número de vértices)
 void GrafoMatriz::colore_arestas()
 {

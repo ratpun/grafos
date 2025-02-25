@@ -297,6 +297,7 @@ void GrafoLista::imprime_grafo() const {
   }
 }
 
+// Algoritmo Guloso para coloração de arestas
 // Complexidade O(E.N), onde E é o numero de arestas e N o numero de vertices
 void GrafoLista::colore_arestas() {
   // Aloca dinamicamente o array para armazenar a cor de cada aresta
