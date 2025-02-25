@@ -27,6 +27,7 @@ public:
   void deleta_no(int id) override;
   void deleta_aresta(int origem, int destino) override;
   virtual void imprime_grafo() const override;
+  virtual void colore_arestas() override;
 };
 
 #endif

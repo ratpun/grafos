@@ -54,6 +54,7 @@ public:
   virtual void deleta_aresta(int origem, int destino) = 0;
 
   virtual void imprime_grafo() const = 0;
+  virtual void colore_arestas() = 0;
 };
 
 #endif

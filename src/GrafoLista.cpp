@@ -296,3 +296,86 @@ void GrafoLista::imprime_grafo() const {
     atual = atual->prox;
   }
 }
+
+// Complexidade O(E.N), onde E é o numero de arestas e N o numero de vertices
+void GrafoLista::colore_arestas() {
+  // Aloca dinamicamente o array para armazenar a cor de cada aresta
+  int *arestaCor = new int[ordem * ordem];
+  // Inicializa o array com -1 (sem cor)
+  for (int i = 0; i < ordem * ordem; i++) {
+    arestaCor[i] = -1;
+  }
+
+  No<Vertice *> *atual = vertices->getHead();
+  while (atual != nullptr) {
+    No<Aresta> *atAresta = atual->dado->arestas->getHead();
+    while (atAresta != nullptr) {
+      int origem = atual->dado->id;
+      int destino = atAresta->dado.destino;
+      int arestaIndex = origem * ordem + destino;
+
+      // Se a aresta já foi colorida, continue
+      if (arestaCor[arestaIndex] != -1) {
+        atAresta = atAresta->prox;
+        continue;
+      }
+
+      // Aloca dinamicamente o array de cores vizinhas
+      bool *coresVizinhas = new bool[ordem];
+      for (int i = 0; i < ordem; i++) {
+        coresVizinhas[i] = false;
+      }
+
+      // Verifica as cores das arestas adjacentes
+      No<Aresta> *vizinho = atual->dado->arestas->getHead();
+      while (vizinho != nullptr) {
+        int vizinhoIndex = origem * ordem + vizinho->dado.destino;
+        if (arestaCor[vizinhoIndex] != -1) {
+          coresVizinhas[arestaCor[vizinhoIndex]] = true;
+        }
+        vizinho = vizinho->prox;
+      }
+
+      Vertice *vDestino = encontrar_vertice(destino);
+      if (vDestino) {
+        vizinho = vDestino->arestas->getHead();
+        while (vizinho != nullptr) {
+          int vizinhoIndex = destino * ordem + vizinho->dado.destino;
+          if (arestaCor[vizinhoIndex] != -1) {
+            coresVizinhas[arestaCor[vizinhoIndex]] = true;
+          }
+          vizinho = vizinho->prox;
+        }
+      }
+
+      // Encontra a menor cor disponível
+      int cor = 0;
+      while (cor < ordem && coresVizinhas[cor]) {
+        cor++;
+      }
+
+      // Atribui a cor à aresta
+      arestaCor[arestaIndex] = cor;
+      cout << "Aresta " << origem << " -> " << destino << ": Cor " << cor << endl;
+      
+      // Libera a memória alocada para coresVizinhas
+      delete[] coresVizinhas;
+      
+      atAresta = atAresta->prox;
+    }
+    atual = atual->prox;
+  }
+
+  // Conta o número total de cores usadas
+  int coresUsadas = 0;
+  for (int i = 0; i < ordem * ordem; i++) {
+    if (arestaCor[i] != -1) {
+      coresUsadas = max(coresUsadas, arestaCor[i] + 1);
+    }
+  }
+
+  cout << "Número total de cores usadas: " << coresUsadas << endl;
+
+  // Libera a memória alocada para arestaCor
+  delete[] arestaCor;
+}
