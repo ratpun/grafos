@@ -297,110 +297,110 @@ void GrafoLista::imprime_grafo() const {
   }
 }
 
-// Algoritmo Guloso para coloração de arestas
-// Complexidade O(E.N), onde E é o numero de arestas e N o numero de vertices
 void GrafoLista::colore_arestas() {
-  std::cout << "Iniciando coloração de arestas..." << std::endl;
+    std::cout << "Iniciando coloração de arestas..." << std::endl;
 
-  int *arestaCor = new int[ordem * ordem];
-  std::fill(arestaCor, arestaCor + (ordem * ordem), -1); // Inicializa todas as arestas sem cor
+    int *arestaCor = new int[ordem * ordem];
+    std::fill(arestaCor, arestaCor + (ordem * ordem), -1); // Inicializa todas as arestas sem cor
 
-  No<Vertice *> *atual = vertices->getHead();
-  while (atual != nullptr) {
-    No<Aresta> *atAresta = atual->dado->arestas->getHead();
+    // Itera sobre cada vértice (lista de vértices)
+    No<Vertice *> *atual = vertices->getHead();
+    while (atual != nullptr) {
+        // Para cada vértice, percorre suas arestas de saída
+        No<Aresta> *atAresta = atual->dado->arestas->getHead();
+        while (atAresta != nullptr) {
+            int origem = atual->dado->id;
+            int destino = atAresta->dado.destino;
 
-    while (atAresta != nullptr) {
-      int origem = atual->dado->id;
-      int destino = atAresta->dado.destino;
+            int arestaIndex = (origem - 1) * ordem + (destino - 1);
+            int arestaIndexInvertida = (destino - 1) * ordem + (origem - 1);
 
-      int arestaIndex = (origem - 1) * ordem + (destino - 1);
-      int arestaIndexInvertida = (destino - 1) * ordem + (origem - 1);
-
-      // Se a aresta já foi colorida, continue
-      if (arestaCor[arestaIndex] != -1) {
-        atAresta = atAresta->prox;
-        continue;
-      }
-
-      // Criando array para armazenar cores usadas pelas arestas adjacentes
-      bool *coresUsadas = new bool[ordem];
-      std::fill(coresUsadas, coresUsadas + ordem, false);
-
-      // Verifica cores das arestas que partem do mesmo vértice origem
-      No<Aresta> *vizinho = atual->dado->arestas->getHead();
-      while (vizinho != nullptr) {
-        int vizinhoIndex = (origem - 1) * ordem + (vizinho->dado.destino - 1);
-        if (vizinhoIndex >= 0 && vizinhoIndex < (ordem * ordem) && arestaCor[vizinhoIndex] != -1) {
-          coresUsadas[arestaCor[vizinhoIndex]] = true;
-        }
-        vizinho = vizinho->prox;
-      }
-
-      // Verifica cores das arestas que chegam ao mesmo vértice origem
-      No<Vertice *> *atualOrigem = vertices->getHead();
-      while (atualOrigem != nullptr) {
-        No<Aresta> *entrada = atualOrigem->dado->arestas->getHead();
-        while (entrada != nullptr) {
-          if (entrada->dado.destino == origem) {
-            int entradaIndex = (entrada->dado.destino - 1) * ordem + (origem - 1);
-            if (entradaIndex >= 0 && entradaIndex < (ordem * ordem) && arestaCor[entradaIndex] != -1) {
-              coresUsadas[arestaCor[entradaIndex]] = true;
+            // Se a aresta já foi colorida, pula para a próxima
+            if (arestaCor[arestaIndex] != -1) {
+                atAresta = atAresta->prox;
+                continue;
             }
-          }
-          entrada = entrada->prox;
-        }
-        atualOrigem = atualOrigem->prox;
-      }
 
-      // Verifica cores das arestas que chegam ao mesmo vértice destino
-      No<Vertice *> *atualDestino = vertices->getHead();
-      while (atualDestino != nullptr) {
-        No<Aresta> *entrada = atualDestino->dado->arestas->getHead();
-        while (entrada != nullptr) {
-          if (entrada->dado.destino == destino) {
-            int entradaIndex = (destino - 1) * ordem + (entrada->dado.destino - 1);
-            if (entradaIndex >= 0 && entradaIndex < (ordem * ordem) && arestaCor[entradaIndex] != -1) {
-              coresUsadas[arestaCor[entradaIndex]] = true;
+            // Cria array para armazenar as cores usadas pelas arestas incidentes
+            bool *coresUsadas = new bool[ordem];
+            std::fill(coresUsadas, coresUsadas + ordem, false);
+
+            // Verifica cores das arestas que partem do mesmo vértice origem
+            No<Aresta> *vizinho = atual->dado->arestas->getHead();
+            while (vizinho != nullptr) {
+                int vizinhoIndex = (origem - 1) * ordem + (vizinho->dado.destino - 1);
+                if (vizinhoIndex >= 0 && vizinhoIndex < (ordem * ordem) && arestaCor[vizinhoIndex] != -1) {
+                    coresUsadas[arestaCor[vizinhoIndex]] = true;
+                }
+                vizinho = vizinho->prox;
             }
-          }
-          entrada = entrada->prox;
+
+            // Verifica cores das arestas que chegam ao vértice origem (arestas de outros vértices que chegam em 'origem')
+            No<Vertice *> *atualOrigem = vertices->getHead();
+            while (atualOrigem != nullptr) {
+                No<Aresta> *entrada = atualOrigem->dado->arestas->getHead();
+                while (entrada != nullptr) {
+                    if (entrada->dado.destino == origem) {
+                        // Aqui o índice correto utiliza o id do vértice de onde sai a aresta (atualOrigem)
+                        int entradaIndex = (atualOrigem->dado->id - 1) * ordem + (origem - 1);
+                        if (entradaIndex >= 0 && entradaIndex < (ordem * ordem) && arestaCor[entradaIndex] != -1) {
+                            coresUsadas[arestaCor[entradaIndex]] = true;
+                        }
+                    }
+                    entrada = entrada->prox;
+                }
+                atualOrigem = atualOrigem->prox;
+            }
+
+            // Verifica cores das arestas que chegam ao vértice destino (arestas de outros vértices que chegam em 'destino')
+            No<Vertice *> *atualDestino = vertices->getHead();
+            while (atualDestino != nullptr) {
+                No<Aresta> *entrada = atualDestino->dado->arestas->getHead();
+                while (entrada != nullptr) {
+                    if (entrada->dado.destino == destino) {
+                        // O índice utiliza o id do vértice de origem da aresta (atualDestino)
+                        int entradaIndex = (atualDestino->dado->id - 1) * ordem + (destino - 1);
+                        if (entradaIndex >= 0 && entradaIndex < (ordem * ordem) && arestaCor[entradaIndex] != -1) {
+                            coresUsadas[arestaCor[entradaIndex]] = true;
+                        }
+                    }
+                    entrada = entrada->prox;
+                }
+                atualDestino = atualDestino->prox;
+            }
+
+            // Encontra a menor cor disponível
+            int cor = 0;
+            while (cor < ordem && coresUsadas[cor]) {
+                cor++;
+            }
+
+            // Atribui a cor à aresta
+            arestaCor[arestaIndex] = cor;
+            std::cout << "Aresta (" << origem << " -> " << destino << ") colorida com cor: " << cor << std::endl;
+
+            // Se o grafo for não direcionado, também colorimos a aresta reversa
+            if (!direcionado) {
+                arestaCor[arestaIndexInvertida] = cor;
+            }
+
+            // Libera a memória do array auxiliar
+            delete[] coresUsadas;
+
+            atAresta = atAresta->prox;
         }
-        atualDestino = atualDestino->prox;
-      }
-
-      // Encontra a menor cor disponível
-      int cor = 0;
-      while (coresUsadas[cor]) {
-        cor++;
-      }
-
-      // Atribui a cor à aresta
-      arestaCor[arestaIndex] = cor;
-      std::cout << "Aresta (" << origem << " -> " << destino << ") colorida com cor: " << cor << std::endl;
-
-      // Se o grafo for não direcionado, colorimos também a aresta reversa
-      if (!direcionado) {
-        arestaCor[arestaIndexInvertida] = cor;
-      }
-
-      // Libera memória alocada para coresUsadas
-      delete[] coresUsadas;
-
-      atAresta = atAresta->prox;
+        atual = atual->prox;
     }
-    atual = atual->prox;
-  }
 
-  // Calcula o número total de cores utilizadas
-  int coresUtilizadas = 0;
-  for (int i = 0; i < ordem * ordem; i++) {
-    if (arestaCor[i] != -1) {
-      coresUtilizadas = std::max(coresUtilizadas, arestaCor[i] + 1);
+    // Calcula o número total de cores utilizadas
+    int coresUtilizadas = 0;
+    for (int i = 0; i < ordem * ordem; i++) {
+        if (arestaCor[i] != -1) {
+            coresUtilizadas = std::max(coresUtilizadas, arestaCor[i] + 1);
+        }
     }
-  }
+    std::cout << "Número total de cores usadas: " << coresUtilizadas << std::endl;
 
-  std::cout << "Número total de cores usadas: " << coresUtilizadas << std::endl;
-
-  // Libera memória alocada para arestaCor
-  delete[] arestaCor;
+    // Libera a memória alocada para as cores das arestas
+    delete[] arestaCor;
 }
