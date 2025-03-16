@@ -12,16 +12,8 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  // string flagDirecao = argv[1];
-  // string flagEstrutura = argv[2]; // -m ou -l
-  // string nomeArquivo = argv[3];
-
-  // string flagDirecao = argv[1];
-
   string flagEstrutura = argv[2]; // -m ou -l
   string nomeArquivo = argv[3];
-
-  // cout << nomeArquivo << endl;
 
   Grafo *grafo = nullptr;
   if (flagEstrutura == "-m")
@@ -76,29 +68,10 @@ int main(int argc, char *argv[]) {
   //      << res.distancia << endl;
 
   cout << "Executando algoritmos de coloração..." << endl;
-  // Medindo tempo da Coloração Gulosa
-  // clock_t inicio = clock();
   grafo->coloracaoGulosa();
-  // clock_t fim = clock();
-  // double tempo_guloso = double(fim - inicio) / CLOCKS_PER_SEC;
-  // cout << "Tempo de execução (Guloso): " << tempo_guloso << " segundos" <<
-  // endl;
-
-  // Medindo tempo da Coloração Randomizada
-  // inicio = clock();
   grafo->coloracaoRandomizada(10);
-  // fim = clock();
-  // double tempo_randomizado = double(fim - inicio) / CLOCKS_PER_SEC;
-  // cout << "Tempo de execução (Randomizado): " << tempo_randomizado
-  //      << " segundos" << endl;
-
-  // Medindo tempo da Coloração Reativa
-  // inicio = clock();
   grafo->coloracaoReativa(10, 0.5);
-  // fim = clock();
-  // double tempo_reativo = double(fim - inicio) / CLOCKS_PER_SEC;
-  // cout << "Tempo de execução (Reativo): " << tempo_reativo << " segundos"
-  //      << endl;
+
   delete grafo;
   return 0;
 }
