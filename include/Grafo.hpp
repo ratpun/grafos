@@ -54,6 +54,10 @@ public:
   virtual void deleta_aresta(int origem, int destino) = 0;
 
   virtual void imprime_grafo() const = 0;
+
+  virtual void coloracaoGulosa();
+  virtual void coloracaoRandomizada(int iteracoes);
+  virtual void coloracaoReativa(int iteracoes, double alpha);
 };
 
 #endif

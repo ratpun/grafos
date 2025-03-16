@@ -41,15 +41,18 @@ void GrafoMatriz::inserir_aresta(int origem, int destino, int peso) {
     cerr << "Erro: laço não permitido (origem == destino).\n";
     return;
   }
-  if (matriz[o][d] != 0) {
-    cerr << "Erro: aresta já existe (aresta múltipla não permitida).\n";
+
+  if (o < 0 || o >= nNos || d < 0 || d >= nNos) {
+    cerr << "Erro: Índices de aresta inválidos (" << origem << ", " << destino
+         << ").\n";
     return;
   }
 
-  if (o < 0 || o >= nNos || d < 0 || d >= nNos) {
-    cerr << "Indices de aresta invalidos." << endl;
+  if (matriz[o][d] != 0) {
+    cerr << "Erro: Aresta já existe (aresta múltipla não permitida).\n";
     return;
   }
+
   matriz[o][d] = peso;
   if (!direcionado)
     matriz[d][o] = peso;
@@ -71,31 +74,38 @@ void GrafoMatriz::realocarMatriz(int novaCapacidade) {
   // Cria novo vetor de pesos e nova matriz
   int *novoPesos = new int[novaCapacidade];
   int **novaMatriz = new int *[novaCapacidade];
+
+  // Inicializa os novos pesos (para garantir que não há lixo de memória)
   for (int i = 0; i < novaCapacidade; i++) {
-    novaMatriz[i] = nullptr;
+    novoPesos[i] = (i < nNos) ? pesosVertices[i] : 0;
   }
-  // Copia os dados dos nós já inseridos
-  for (int i = 0; i < nNos; i++) {
-    novoPesos[i] = pesosVertices[i];
-    // Aloca uma nova linha com novaCapacidade colunas
+
+  // Inicializa nova matriz
+  for (int i = 0; i < novaCapacidade; i++) {
     novaMatriz[i] = new int[novaCapacidade];
-    // Copia os valores existentes para as colunas de 0 a nNos-1
-    for (int j = 0; j < nNos; j++) {
-      novaMatriz[i][j] = matriz[i][j];
-    }
-    // Inicializa as colunas restantes com 0
-    for (int j = nNos; j < novaCapacidade; j++) {
-      novaMatriz[i][j] = 0;
+    for (int j = 0; j < novaCapacidade; j++) {
+      // Copia valores existentes
+      if (i < nNos && j < nNos) {
+        novaMatriz[i][j] = matriz[i][j];
+      } else {
+        // Inicializa novos elementos com 0
+        novaMatriz[i][j] = 0;
+      }
     }
   }
+
   // Libera a matriz e o vetor de pesos antigos
-  for (int i = 0; i < nNos; i++) {
-    if (matriz[i] != nullptr) {
-      delete[] matriz[i];
+  if (matriz != nullptr) {
+    for (int i = 0; i < nNos; i++) {
+      delete[] matriz[i]; // Libera cada linha alocada
     }
+    delete[] matriz; // Libera o array de ponteiros
   }
-  delete[] matriz;
-  delete[] pesosVertices;
+
+  if (pesosVertices != nullptr) {
+    delete[] pesosVertices;
+  }
+
   // Atualiza os ponteiros e a capacidade
   matriz = novaMatriz;
   pesosVertices = novoPesos;
