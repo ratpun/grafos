@@ -1,4 +1,4 @@
-# Projeto de Grafos - DCC059
+# Projeto de Grafos - DCC059  
 
 **Departamento de Ciência da Computação - UFJF**  
 **Disciplina**: Teoria dos Grafos  
@@ -6,27 +6,26 @@
 
 ---
 
-## Sobre o Projeto
+## Sobre o Projeto  
 
-# Trabalho 2 – Grafos 
+### Trabalho 3 – Coloração de Arestas  
 
-## Descrição
+Este projeto dá continuidade ao Trabalho 2, focando na implementação e análise de algoritmos para a **coloração de arestas** de um grafo. Foram implementados três métodos diferentes:  
+- **Coloração Gulosa**  
+- **Coloração Randomizada**  
+- **Coloração Reativa**  
 
-Este projeto expande o Trabalho 1, incorporando funcionalidades dinâmicas para a manipulação de grafos em C++. Além de carregar um grafo a partir de um arquivo, o programa agora permite:
+A implementação suporta duas representações de grafos: **Matriz de Adjacência** e **Lista de Adjacência**. O objetivo é comparar a eficiência e qualidade das soluções encontradas por cada algoritmo em diferentes instâncias de grafos.
 
-- Inserir novos nós e arestas dinamicamente.
-- Remover nós e arestas, com reindexação dos nós remanescentes para manter o grafo isomorfo ao original.
-- Calcular a maior menor distância (o maior dos menores caminhos entre dois nós), utilizando o algoritmo de Floyd–Warshall.
+---
 
-O projeto possui duas implementações distintas de armazenamento:
+## 📌 **Descrição do Problema**  
 
-1. **GrafoMatriz:**  
-   Utiliza uma matriz de adjacência dinâmica, com capacidade inicial de 10 nós, que é realocada (dobrando a capacidade) quando necessário. Ao remover um nó, a matriz é reconstruída para conter somente os nós remanescentes, com os IDs recalculados de forma sequencial.
+A coloração de arestas é um problema clássico da teoria dos grafos, onde o objetivo é atribuir cores às arestas de um grafo de forma que duas arestas adjacentes não tenham a mesma cor. Esse problema pertence à classe NP-difícil, e por isso, utilizamos heurísticas para obter soluções aproximadas.
 
-2. **GrafoLista:**  
-   Utiliza listas encadeadas para armazenar os vértices e suas arestas. A inserção dos nós é feita de modo a preservar a ordem de leitura, e a remoção envolve atualizar os IDs dos nós remanescentes e as referências das arestas.
+---
 
-## Estrutura do Projeto
+## 📂 **Estrutura do Projeto**  
 
 ```
 | include/
@@ -49,54 +48,66 @@ O projeto possui duas implementações distintas de armazenamento:
 | main.cpp
 ```
 
-## Como Compilar
+---
 
-Utilize um compilador C++ (por exemplo, clang++) com as opções:
+## ⚙️ **Compilação e Execução**  
+
+### **Compilação**  
+O código pode ser compilado com:
 
 ```bash
-clang++ -o main.out main.cpp src/*.cpp
+g++ -o main.out main.cpp src/*.cpp -I./include/ -g -Wall -Werror
 ```
 
-## Como Executar
+### **Execução**  
+O programa pode ser executado em dois modos: **Matriz de Adjacência** e **Lista de Adjacência**.  
 
-O programa é executado via linha de comando. Exemplos:
+#### **Modo Matriz**
+```bash
+./main.out -p -m entradas/grafo.txt
+```
 
-- Para a versão Matriz:
-  ```bash
-  ./main.out -d -m entradas/grafo.txt
-  ```
-- Para a versão Lista:
-  ```bash
-  ./main.out -d -l entradas/grafo.txt
-  ```
+#### **Modo Lista**
+```bash
+./main.out -p -l entradas/grafo.txt
+```
 
-Os parâmetros são:
-- **-d** ou **-n**: Indicam se o grafo é direcionado (-d para direcionado, -n para não direcionado).
-- **-m** ou **-l**: Selecionam a estrutura de armazenamento (matriz ou lista).
-- **nome_arquivo.txt**: Caminho para o arquivo de entrada que descreve o grafo.
+Os parâmetros são:  
+- **-p**: Indica que a coloração será executada.  
+- **-m** ou **-l**: Escolhe a estrutura de armazenamento (**matriz** ou **lista**).  
 
-## Formato do Arquivo de Entrada
+### **Análise de Memória**  
+Para verificar a alocação e uso de memória, o código pode ser analisado com **Valgrind**:  
 
-O arquivo deve ter o seguinte formato:
+```bash
+valgrind ./main.out -p -m entradas/grafo.txt
+valgrind ./main.out -p -l entradas/grafo.txt
+```
 
-- **Primeira linha:**  
-  `<ordem> <direcionado> <ponderadoVertices> <ponderadoArestas>`
-  
-  Por exemplo, para um grafo com 5 nós não direcionado, sem ponderação:
-  ```
-  5 0 0 0
-  ```
+---
 
-- **Segunda linha (opcional):**  
-  Lista de pesos dos vértices, se os vértices forem ponderados.
+## 📑 **Formato do Arquivo de Entrada**  
 
-- **Linhas seguintes:**  
-  Cada linha representa uma aresta. Se as arestas forem ponderadas, cada linha deve conter:  
-  `<origem> <destino> <peso>`
+O grafo deve ser descrito em um arquivo `.txt` no seguinte formato:
 
-  Caso contrário, os valores de peso são ignorados (e um peso padrão, geralmente 1, é usado).
+1. **Primeira linha:**  
+   ```
+   <número de vértices> <direcionado> <ponderadoVertices> <ponderadoArestas>
+   ```
+   Exemplo:  
+   ```
+   5 0 0 0
+   ```
 
-Exemplo de arquivo de entrada:
+2. **Segunda linha (opcional):** Lista de pesos dos vértices (se ponderado).  
+
+3. **Demais linhas:** Cada linha representa uma aresta:  
+   ```
+   <origem> <destino> <peso>
+   ```
+   Se o grafo não for ponderado, o peso pode ser ignorado.
+
+Exemplo:
 ```
 5 0 0 0
 1 2
@@ -109,23 +120,46 @@ Exemplo de arquivo de entrada:
 1 5
 ```
 
-## Funcionalidades Dinâmicas
+---
 
-Após o carregamento do grafo, o programa executa as seguintes operações:
+## 🏗️ **Algoritmos Implementados**  
 
-1. **Exclusão do Nó:**  
-   A função `deleta_no` remove o nó com o id especificado, elimina todas as arestas incidentes e reindexa os nós remanescentes (os IDs dos nós remanescentes serão renumerados de forma sequencial).
+### **1️⃣ Coloração Gulosa**
+- Atribui a menor cor disponível para cada aresta, garantindo que duas arestas adjacentes nunca tenham a mesma cor.
+- Simples e eficiente, mas pode gerar soluções não ótimas.
 
-2. **Exclusão da Aresta:**  
-   A função `deleta_aresta` remove a primeira aresta do nó de id 2, conforme definido pelo método `get_vizinhos`.
+### **2️⃣ Coloração Randomizada**
+- Variação do método guloso onde a cor de cada aresta é escolhida **aleatoriamente** dentro de um conjunto de cores permitidas.
+- Evita que o algoritmo sempre siga a mesma sequência, buscando explorar outras possibilidades.
 
-3. **Cálculo da Maior Menor Distância:**  
-   A função `calculaMaiorMenorDistancia` (implementada de forma genérica na classe base) utiliza os métodos virtuais `getPesoAresta` e (se necessário) `get_vizinhos` para computar, via Floyd–Warshall, os menores caminhos entre todos os pares de nós e determinar o par com a maior distância mínima.
-
-## Considerações Finais
-
-- As operações de inserção, remoção e reindexação devem ser implementadas de forma consistente nas versões matriz e lista para que os resultados sejam idênticos.
-- O cálculo da maior menor distância depende de uma correta reconstrução da estrutura do grafo após remoções.
-- Se ocorrerem discrepâncias nos resultados, verifique a reindexação dos nós e a atualização das arestas.
+### **3️⃣ Coloração Reativa**
+- Adaptação do método randomizado onde o fator de escolha de cores (`alpha`) é ajustado dinamicamente.
+- Se os resultados estiverem ruins, `alpha` é reduzido para restringir a aleatoriedade.
+- Se os resultados estiverem bons, `alpha` é aumentado para explorar mais variações.
 
 ---
+
+## 📊 **Comparação de Resultados**  
+
+Os algoritmos foram testados em várias instâncias de grafos reais da literatura, variando de **6 mil a 62 mil vértices**. O desempenho foi medido em termos de:  
+- **Tempo de execução**
+- **Número total de cores utilizadas**
+
+### **Resumo dos Resultados**
+| Grafo  | Representação | Tempo de Leitura (s) | Guloso (Cores, Tempo) | Randomizado (Cores, Tempo) | Reativo (Cores, Tempo, Alpha) |
+|--------|--------------|---------------------|----------------------|----------------------|----------------------|
+| 62k    | Lista        | 149.8               | 8, 29.6s             | 22, 287.4s           | 15, 288.4s, 0.52     |
+| 62k    | Matriz       | 59.9                | 8, 10.3s             | 20, 29.6s            | 15, 28.4s, 0.54      |
+| 36k    | Lista        | 48.3                | 8, 10.5s             | 18, 113.5s           | 15, 100.7s, 0.51     |
+| 36k    | Matriz       | 120.0               | 8, 35.8s             | 18, 268.8s           | 15, 245.7s, 0.50     |
+| 22k    | Lista        | 20.0                | 8, 3.98s             | 18, 43.4s            | 14, 41.4s, 0.50      |
+| 22k    | Matriz       | 96.2                | 8, 12.6s             | 19, 104.9s           | 14, 104.0s, 0.51     |
+
+Observações:  
+- A **representação por Lista** é mais eficiente para leitura e execução de coloração gulosa.  
+- A **representação por Matriz** tem vantagens em algumas instâncias pequenas.  
+- O **algoritmo reativo** consegue melhorar os resultados do randomizado em algumas instâncias, mas pode ser sensível ao parâmetro `alpha`.
+
+---
+
+
