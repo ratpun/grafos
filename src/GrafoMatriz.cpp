@@ -1,7 +1,12 @@
 #include "../include/GrafoMatriz.hpp"
 #include "../include/IntList.hpp"
-#include <cstdlib>
+#include <fstream>
 #include <iostream>
+#include <iomanip>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <string>
 using namespace std;
 
 const double INF = 1e9;
@@ -295,34 +300,29 @@ void GrafoMatriz::imprime_grafo() const
 // Complexidade O(N^2),pois percorre toda a matriz, mesmo onde não há arestas (N é o número de vértices)
 void GrafoMatriz::colore_arestas()
 {
-  // Inicializa o vetor de cores com -1 (nenhuma cor atribuída)
   int *arestaCor = new int[nNos * nNos];
   for (int i = 0; i < nNos * nNos; i++)
   {
     arestaCor[i] = -1;
   }
 
-  // Itera sobre a matriz de adjacência
   for (int i = 0; i < nNos; i++)
   {
     for (int j = 0; j < nNos; j++)
     {
       if (matriz[i][j] == 0)
-        continue; // Não há aresta
+        continue; 
       int arestaIndex = i * nNos + j;
 
-      // Se a aresta já foi colorida, continue
       if (arestaCor[arestaIndex] != -1)
         continue;
 
-      // Aloca dinamicamente o array de cores vizinhas
       bool *coresVizinhas = new bool[nNos];
       for (int k = 0; k < nNos; k++)
       {
         coresVizinhas[k] = false;
       }
 
-      // Verifica as cores das arestas adjacentes
       for (int k = 0; k < nNos; k++)
       {
         if (matriz[i][k] != 0)
@@ -333,13 +333,9 @@ void GrafoMatriz::colore_arestas()
             coresVizinhas[arestaCor[vizinhoIndex]] = true;
           }
         }
-      }
-
-      for (int k = 0; k < nNos; k++)
-      {
-        if (matriz[j][k] != 0)
+        if (matriz[k][j] != 0)
         {
-          int vizinhoIndex = j * nNos + k;
+          int vizinhoIndex = k * nNos + j;
           if (arestaCor[vizinhoIndex] != -1)
           {
             coresVizinhas[arestaCor[vizinhoIndex]] = true;
@@ -347,22 +343,18 @@ void GrafoMatriz::colore_arestas()
         }
       }
 
-      // Encontra a menor cor disponível
       int cor = 0;
       while (cor < nNos && coresVizinhas[cor])
       {
         cor++;
       }
 
-      // Atribui a cor à aresta
       arestaCor[arestaIndex] = cor;
       
-      // Libera a memória alocada para coresVizinhas
       delete[] coresVizinhas;
     }
   }
 
-  // Imprime as cores das arestas
   for (int i = 0; i < nNos; i++)
   {
     for (int j = 0; j < nNos; j++)
@@ -374,7 +366,209 @@ void GrafoMatriz::colore_arestas()
       }
     }
   }
-
-  // Libera a memória alocada para arestaCor
   delete[] arestaCor;
+}
+
+void GrafoMatriz::colore_arestas_randomizado()
+{
+  int *arestaCor = new int[nNos * nNos];
+  for (int i = 0; i < nNos * nNos; i++)
+  {
+    arestaCor[i] = -1;
+  }
+
+  srand(time(0));
+
+  int numArestas = 0;
+  for (int i = 0; i < nNos; i++)
+  {
+    for (int j = 0; j < nNos; j++)
+    {
+      if (matriz[i][j] != 0)
+      {
+        numArestas++;
+      }
+    }
+  }
+
+  int *arestas = new int[numArestas * 2];
+  int index = 0;
+  for (int i = 0; i < nNos; i++)
+  {
+    for (int j = 0; j < nNos; j++)
+    {
+      if (matriz[i][j] != 0)
+      {
+        arestas[index * 2] = i;
+        arestas[index * 2 + 1] = j;
+        index++;
+      }
+    }
+  }
+
+  for (int i = 0; i < numArestas; i++)
+  {
+    int r = rand() % numArestas;
+    swap(arestas[i * 2], arestas[r * 2]);
+    swap(arestas[i * 2 + 1], arestas[r * 2 + 1]);
+  }
+
+  for (int i = 0; i < numArestas; i++)
+  {
+    int u = arestas[i * 2];
+    int v = arestas[i * 2 + 1];
+    int arestaIndex = u * nNos + v;
+
+    bool *coresVizinhas = new bool[nNos];
+    for (int k = 0; k < nNos; k++)
+    {
+      coresVizinhas[k] = false;
+    }
+
+    for (int k = 0; k < nNos; k++)
+    {
+      if (matriz[u][k] != 0)
+      {
+        int vizinhoIndex = u * nNos + k;
+        if (arestaCor[vizinhoIndex] != -1)
+        {
+          coresVizinhas[arestaCor[vizinhoIndex]] = true;
+        }
+      }
+      if (matriz[k][v] != 0)
+      {
+        int vizinhoIndex = k * nNos + v;
+        if (arestaCor[vizinhoIndex] != -1)
+        {
+          coresVizinhas[arestaCor[vizinhoIndex]] = true;
+        }
+      }
+    }
+
+    int cor = 0;
+    while (cor < nNos && coresVizinhas[cor])
+    {
+      cor++;
+    }
+
+    arestaCor[arestaIndex] = cor;
+
+    delete[] coresVizinhas;
+  }
+
+  for (int i = 0; i < nNos; i++)
+  {
+    for (int j = 0; j < nNos; j++)
+    {
+      if (matriz[i][j] != 0)
+      {
+        int arestaIndex = i * nNos + j;
+        std::cout << "Aresta (" << (i + 1) << ", " << (j + 1) << ") - Cor: " << arestaCor[arestaIndex] << std::endl;
+      }
+    }
+  }
+  delete[] arestaCor;
+  delete[] arestas;
+}
+
+void GrafoMatriz::colore_arestas_reativo()
+{
+  int *arestaCor = new int[nNos * nNos];
+  for (int i = 0; i < nNos * nNos; i++)
+  {
+    arestaCor[i] = -1;
+  }
+
+  srand(time(0));
+
+  int numArestas = 0;
+  for (int i = 0; i < nNos; i++)
+  {
+    for (int j = 0; j < nNos; j++)
+    {
+      if (matriz[i][j] != 0)
+      {
+        numArestas++;
+      }
+    }
+  }
+
+  int *arestas = new int[numArestas * 2];
+  int index = 0;
+  for (int i = 0; i < nNos; i++)
+  {
+    for (int j = 0; j < nNos; j++)
+    {
+      if (matriz[i][j] != 0)
+      {
+        arestas[index * 2] = i;
+        arestas[index * 2 + 1] = j;
+        index++;
+      }
+    }
+  }
+
+  for (int i = 0; i < numArestas; i++)
+  {
+    int r = rand() % numArestas;
+    swap(arestas[i * 2], arestas[r * 2]);
+    swap(arestas[i * 2 + 1], arestas[r * 2 + 1]);
+  }
+
+  for (int i = 0; i < numArestas; i++)
+  {
+    int u = arestas[i * 2];
+    int v = arestas[i * 2 + 1];
+    int arestaIndex = u * nNos + v;
+
+    bool *coresVizinhas = new bool[nNos];
+    for (int k = 0; k < nNos; k++)
+    {
+      coresVizinhas[k] = false;
+    }
+
+    for (int k = 0; k < nNos; k++)
+    {
+      if (matriz[u][k] != 0)
+      {
+        int vizinhoIndex = u * nNos + k;
+        if (arestaCor[vizinhoIndex] != -1)
+        {
+          coresVizinhas[arestaCor[vizinhoIndex]] = true;
+        }
+      }
+      if (matriz[k][v] != 0)
+      {
+        int vizinhoIndex = k * nNos + v;
+        if (arestaCor[vizinhoIndex] != -1)
+        {
+          coresVizinhas[arestaCor[vizinhoIndex]] = true;
+        }
+      }
+    }
+
+    int cor = 0;
+    while (cor < nNos && coresVizinhas[cor])
+    {
+      cor++;
+    }
+
+    arestaCor[arestaIndex] = cor;
+
+    delete[] coresVizinhas;
+  }
+
+  for (int i = 0; i < nNos; i++)
+  {
+    for (int j = 0; j < nNos; j++)
+    {
+      if (matriz[i][j] != 0)
+      {
+        int arestaIndex = i * nNos + j;
+        std::cout << "Aresta (" << (i + 1) << ", " << (j + 1) << ") - Cor: " << arestaCor[arestaIndex] << std::endl;
+      }
+    }
+  }
+  delete[] arestaCor;
+  delete[] arestas;
 }

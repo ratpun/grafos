@@ -43,7 +43,9 @@ public:
   virtual double getPesoAresta(int origem, int destino) const override;
 
   virtual void imprime_grafo() const override;
-  virtual void colore_arestas() override;
+  virtual void colore_arestas();
+  void colore_arestas_randomizado();
+  void colore_arestas_reativo();
 };
 
 #endif

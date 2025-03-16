@@ -3,6 +3,7 @@
 #include "../include/ListaEncadeada.hpp"
 #include <cstdlib>
 #include <iostream>
+#include <ctime>
 using namespace std;
 
 GrafoLista::GrafoLista() { vertices = new ListaEncadeada<Vertice *>(); }
@@ -403,4 +404,212 @@ void GrafoLista::colore_arestas() {
 
     // Libera a memória alocada para as cores das arestas
     delete[] arestaCor;
+}
+
+void GrafoLista::colore_arestas_randomizado()
+{
+  int *arestaCor = new int[ordem * ordem];
+  std::fill(arestaCor, arestaCor + (ordem * ordem), -1);
+
+  srand(time(0));
+
+  int numArestas = 0;
+  No<Vertice *> *atual = vertices->getHead();
+  while (atual != nullptr)
+  {
+    No<Aresta> *atAresta = atual->dado->arestas->getHead();
+    while (atAresta != nullptr)
+    {
+      numArestas++;
+      atAresta = atAresta->prox;
+    }
+    atual = atual->prox;
+  }
+
+  int *arestas = new int[numArestas * 2];
+  int index = 0;
+  atual = vertices->getHead();
+  while (atual != nullptr)
+  {
+    No<Aresta> *atAresta = atual->dado->arestas->getHead();
+    while (atAresta != nullptr)
+    {
+      arestas[index * 2] = atual->dado->id;
+      arestas[index * 2 + 1] = atAresta->dado.destino;
+      index++;
+      atAresta = atAresta->prox;
+    }
+    atual = atual->prox;
+  }
+
+  for (int i = 0; i < numArestas; i++)
+  {
+    int r = rand() % numArestas;
+    swap(arestas[i * 2], arestas[r * 2]);
+    swap(arestas[i * 2 + 1], arestas[r * 2 + 1]);
+  }
+
+  for (int i = 0; i < numArestas; i++)
+  {
+    int u = arestas[i * 2];
+    int v = arestas[i * 2 + 1];
+    int arestaIndex = (u - 1) * ordem + (v - 1);
+
+    bool *coresVizinhas = new bool[ordem];
+    std::fill(coresVizinhas, coresVizinhas + ordem, false);
+
+    No<Vertice *> *atual = vertices->getHead();
+    while (atual != nullptr)
+    {
+      if (atual->dado->id == u || atual->dado->id == v)
+      {
+        No<Aresta> *atAresta = atual->dado->arestas->getHead();
+        while (atAresta != nullptr)
+        {
+          int vizinhoIndex = (atual->dado->id - 1) * ordem + (atAresta->dado.destino - 1);
+          if (arestaCor[vizinhoIndex] != -1)
+          {
+            coresVizinhas[arestaCor[vizinhoIndex]] = true;
+          }
+          atAresta = atAresta->prox;
+        }
+      }
+      atual = atual->prox;
+    }
+
+    int cor = 0;
+    while (cor < ordem && coresVizinhas[cor])
+    {
+      cor++;
+    }
+
+    arestaCor[arestaIndex] = cor;
+
+    if (!direcionado)
+    {
+      int arestaIndexInvertida = (v - 1) * ordem + (u - 1);
+      arestaCor[arestaIndexInvertida] = cor;
+    }
+
+    delete[] coresVizinhas;
+  }
+
+  for (int i = 0; i < ordem; i++)
+  {
+    for (int j = 0; j < ordem; j++)
+    {
+      int arestaIndex = i * ordem + j;
+      if (arestaCor[arestaIndex] != -1)
+      {
+        std::cout << "Aresta (" << (i + 1) << ", " << (j + 1) << ") - Cor: " << arestaCor[arestaIndex] << std::endl;
+      }
+    }
+  }
+
+  delete[] arestaCor;
+  delete[] arestas;
+}
+
+void GrafoLista::colore_arestas_reativo()
+{
+  int *arestaCor = new int[ordem * ordem];
+  std::fill(arestaCor, arestaCor + (ordem * ordem), -1);
+
+  srand(time(0));
+
+  int numArestas = 0;
+  No<Vertice *> *atual = vertices->getHead();
+  while (atual != nullptr)
+  {
+    No<Aresta> *atAresta = atual->dado->arestas->getHead();
+    while (atAresta != nullptr)
+    {
+      numArestas++;
+      atAresta = atAresta->prox;
+    }
+    atual = atual->prox;
+  }
+
+  int *arestas = new int[numArestas * 2];
+  int index = 0;
+  atual = vertices->getHead();
+  while (atual != nullptr)
+  {
+    No<Aresta> *atAresta = atual->dado->arestas->getHead();
+    while (atAresta != nullptr)
+    {
+      arestas[index * 2] = atual->dado->id;
+      arestas[index * 2 + 1] = atAresta->dado.destino;
+      index++;
+      atAresta = atAresta->prox;
+    }
+    atual = atual->prox;
+  }
+
+  for (int i = 0; i < numArestas; i++)
+  {
+    int r = rand() % numArestas;
+    swap(arestas[i * 2], arestas[r * 2]);
+    swap(arestas[i * 2 + 1], arestas[r * 2 + 1]);
+  }
+
+  for (int i = 0; i < numArestas; i++)
+  {
+    int u = arestas[i * 2];
+    int v = arestas[i * 2 + 1];
+    int arestaIndex = (u - 1) * ordem + (v - 1);
+
+    bool *coresVizinhas = new bool[ordem];
+    std::fill(coresVizinhas, coresVizinhas + ordem, false);
+
+    No<Vertice *> *atual = vertices->getHead();
+    while (atual != nullptr)
+    {
+      if (atual->dado->id == u || atual->dado->id == v)
+      {
+        No<Aresta> *atAresta = atual->dado->arestas->getHead();
+        while (atAresta != nullptr)
+        {
+          int vizinhoIndex = (atual->dado->id - 1) * ordem + (atAresta->dado.destino - 1);
+          if (arestaCor[vizinhoIndex] != -1)
+          {
+            coresVizinhas[arestaCor[vizinhoIndex]] = true;
+          }
+          atAresta = atAresta->prox;
+        }
+      }
+      atual = atual->prox;
+    }
+
+    int cor = 0;
+    while (cor < ordem && coresVizinhas[cor])
+    {
+      cor++;
+    }
+
+    arestaCor[arestaIndex] = cor;
+
+    if (!direcionado)
+    {
+      int arestaIndexInvertida = (v - 1) * ordem + (u - 1);
+      arestaCor[arestaIndexInvertida] = cor;
+    }
+
+    delete[] coresVizinhas;
+  }
+
+  for (int i = 0; i < ordem; i++)
+  {
+    for (int j = 0; j < ordem; j++)
+    {
+      int arestaIndex = i * ordem + j;
+      if (arestaCor[arestaIndex] != -1)
+      {
+        std::cout << "Aresta (" << (i + 1) << ", " << (j + 1) << ") - Cor: " << arestaCor[arestaIndex] << std::endl;
+      }
+    }
+  }
+
+  delete[] arestaCor;
+  delete[] arestas;
 }
