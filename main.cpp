@@ -12,6 +12,7 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
+  string flagProblema = argv[1];
   string flagEstrutura = argv[2]; // -m ou -l
   string nomeArquivo = argv[3];
 
@@ -36,37 +37,39 @@ int main(int argc, char *argv[]) {
 
   // grafo->imprime_grafo();
 
-  // Exclusão de nó 1 (se existir)
-  // cout << "Excluindo nó 1..." << endl;
+  if (flagProblema != "-p") {
 
-  // grafo->deleta_no(1);
+    // Exclusão de nó 1 (se existir)
+    cout << "Excluindo nó 1..." << endl;
 
-  // Exclusão da primeira aresta do nó 2 (se existir)
-  // cout << "Excluindo primeira aresta do nó 2..." << endl;
-  // IntList vizinhos = grafo->get_vizinhos(2);
-  // if (vizinhos.size() > 0) {
-  //   int primeiroVizinho = vizinhos.get(0);
-  //   grafo->deleta_aresta(2, primeiroVizinho);
-  // }
+    grafo->deleta_no(1);
 
-  // grafo->imprime_grafo();
+    // Exclusão da primeira aresta do nó 2 (se existir)
+    cout << "Excluindo primeira aresta do nó 2..." << endl;
+    IntList vizinhos = grafo->get_vizinhos(2);
+    if (vizinhos.size() > 0) {
+      int primeiroVizinho = vizinhos.get(0);
+      grafo->deleta_aresta(2, primeiroVizinho);
+    }
 
-  // Impressão das propriedades do grafo
-  // cout << "Grau: " << grafo->get_grau() << endl;
-  // cout << "Ordem: " << grafo->get_ordem() << endl;
-  // cout << "Direcionado: " << (grafo->eh_direcionado() ? "Sim" : "Nao") <<
-  // endl; cout << "Vertices ponderados: "
-  //      << (grafo->vertice_ponderado() ? "Sim" : "Nao") << endl;
-  // cout << "Arestas ponderadas: " << (grafo->aresta_ponderada() ? "Sim" :
-  // "Nao")
-  //      << endl;
-  // cout << "Completo: " << (grafo->eh_completo() ? "Sim" : "Nao") << endl;
+    // grafo->imprime_grafo();
 
-  // Cálculo e impressão da maior menor distância (diâmetro do grafo)
-  // Grafo::ResultadoDistancia res = grafo->calculaMaiorMenorDistancia();
-  // cout << "Maior menor distância: (" << res.no1 << "-" << res.no2 << ") "
-  //      << res.distancia << endl;
+    // Impressão das propriedades do grafo
+    cout << "Grau: " << grafo->get_grau() << endl;
+    cout << "Ordem: " << grafo->get_ordem() << endl;
+    cout << "Direcionado: " << (grafo->eh_direcionado() ? "Sim" : "Nao")
+         << endl;
+    cout << "Vertices ponderados: "
+         << (grafo->vertice_ponderado() ? "Sim" : "Nao") << endl;
+    cout << "Arestas ponderadas: "
+         << (grafo->aresta_ponderada() ? "Sim" : "Nao") << endl;
+    cout << "Completo: " << (grafo->eh_completo() ? "Sim" : "Nao") << endl;
 
+    // Cálculo e impressão da maior menor distância (diâmetro do grafo)
+    Grafo::ResultadoDistancia res = grafo->calculaMaiorMenorDistancia();
+    cout << "Maior menor distância: (" << res.no1 << "-" << res.no2 << ") "
+         << res.distancia << endl;
+  }
   cout << "Executando algoritmos de coloração..." << endl;
   grafo->coloracaoGulosa();
   grafo->coloracaoRandomizada(10);
